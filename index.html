@@ -8,7 +8,7 @@
 </head>
 <body>
     <header>
-        <h1>Planet Fhisers</h1>
+        <h1>Planet Fishers</h1>
         <p>Space Apps Challenge - Interactive Star Map</p>
     </header>
 
@@ -21,12 +21,17 @@
             </div>
 
             <!-- Panel flotante afuera del #starmap -->
-            <div class="control-panel floating-panel">
+            <div class="floating-panel-simple" id="floatingPanelSimple">
+                <button id="showPanelBtn">Modelo de IA</button>
+            </div>
+
+            <div class="floating-panel" id="floatingPanel">
+
                 <h3>Modelo de IA</h3>
 
                 <div class="panel-section">
                     <h4>Cargar Datos</h4>
-                    <button id="addDataBtn">Agregar datos</button>
+                    <button id="addDataBtn" class="add-data-btn">Agregar datos</button>
                 </div>
 
                 <div class="panel-section">
@@ -45,6 +50,8 @@
                     <label>Epochs: <span id="epochsVal">10</span></label>
                     <input type="range" id="epochs" min="1" max="100" step="1" value="10">
                 </div>
+
+                <button id="closePanelBtn" class="close-panel-btn">×</button>
             </div>
         </section>
     </main>

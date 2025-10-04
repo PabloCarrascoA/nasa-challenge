@@ -4,6 +4,20 @@ const modalEl = document.getElementById('modal');
 const planetNameEl = document.getElementById('planetName');
 const planetDetailsEl = document.getElementById('planetDetails');
 const closeModalBtn = document.getElementById('closeModal');
+const floatingPanel = document.getElementById('floatingPanel');
+const floatingPanelSimple = document.getElementById('floatingPanelSimple');
+const showPanelBtn = document.getElementById('showPanelBtn');
+const closePanelBtn = document.getElementById('closePanelBtn');
+
+showPanelBtn.addEventListener('click', () => {
+    floatingPanelSimple.style.display = 'none';
+    floatingPanel.style.display = 'block';
+});
+
+closePanelBtn.addEventListener('click', () => {
+    floatingPanel.style.display = 'none';
+    floatingPanelSimple.style.display = 'block';
+})
 
 let viewX = 0;       // esquina superior izquierda de la vista
 let viewY = 0;
