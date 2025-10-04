@@ -1,114 +1,65 @@
-
 const starmapEl = document.getElementById('starmap');
 const modalEl = document.getElementById('modal');
 const planetNameEl = document.getElementById('planetName');
 const planetDetailsEl = document.getElementById('planetDetails');
 const closeModalBtn = document.getElementById('closeModal');
+const floatingPanel = document.getElementById('floatingPanel');
+const floatingPanelSimple = document.getElementById('floatingPanelSimple');
+const showPanelBtn = document.getElementById('showPanelBtn');
+const closePanelBtn = document.getElementById('closePanelBtn');
 
-let viewX = 0;       // esquina superior izquierda de la vista
+showPanelBtn.addEventListener('click', () => {
+    floatingPanelSimple.style.display = 'none';
+    floatingPanel.style.display = 'block';
+});
+
+closePanelBtn.addEventListener('click', () => {
+    floatingPanel.style.display = 'none';
+    floatingPanelSimple.style.display = 'block';
+})
+
+let viewX = 0;
 let viewY = 0;
-let viewSize = 100;  // tamaño de la vista inicial (100x100 unidades)
-const mapSize = 1000; // tamaño real del mapa
-
-// SISTEMA DE SCORE Y EXOPLANETAS DESCUBIERTOS
-// ====================================================
-
-let score = parseInt(localStorage.getItem("score")) || 0;
-let learnedPlanets = JSON.parse(localStorage.getItem("learnedPlanets")) || [];
-
-// Mostrar enlace SCORE en esquina superior izquierda
-function updateScoreDisplay() {
-    let scoreLink = document.getElementById("score-link");
-    if (!scoreLink) {
-        scoreLink = document.createElement("a");
-        scoreLink.id = "score-link";
-        scoreLink.href = "score.html";
-        scoreLink.textContent = `SCORE: ${score}`;
-        Object.assign(scoreLink.style, {
-            position: "fixed",
-            top: "15px",
-            left: "20px",
-            color: "#00ffea",
-            fontFamily: "Orbitron, sans-serif",
-            fontSize: "18px",
-            textDecoration: "none",
-            background: "rgba(0, 0, 0, 0.4)",
-            padding: "6px 12px",
-            borderRadius: "10px",
-            transition: "0.2s",
-            zIndex: "9999"
-        });
-        scoreLink.addEventListener("mouseenter", () => {
-            scoreLink.style.background = "rgba(0, 255, 200, 0.6)";
-        });
-        scoreLink.addEventListener("mouseleave", () => {
-            scoreLink.style.background = "rgba(0, 0, 0, 0.4)";
-        });
-        document.body.appendChild(scoreLink);
-    } else {
-        scoreLink.textContent = `SCORE: ${score}`;
-    }
-}
-
-// Guardar un exoplaneta descubierto
-function addExoplanet(planet) {
-    if (learnedPlanets.find(p => p.name === planet.name)) {
-        return; // ya existe
-    }
-
-    learnedPlanets.push({
-        name: planet.name,
-        type: planet.exoplanet_value ? "Exoplaneta" : "Planeta del Sistema Solar",
-        density: planet.density,
-        atmosphere: planet.atmosphere,
-        water_presence: planet.water_presence,
-        distance: planet.distance,
-        temperature: planet.temperature,
-        discovery_date: new Date().toLocaleString()
-    });
-    score += 10;
-
-    localStorage.setItem("score", score);
-    localStorage.setItem("learnedPlanets", JSON.stringify(learnedPlanets));
-
-    updateScoreDisplay();
-}
+let viewSize = 100;
+const mapSize = 1000;
 
 // --- Generador procedural de planetas ---
 
 function generatePlanets(count) {
-    const atmospheres = ["Nitrogen-Oxygen","Carbon Dioxide","Methane","Hydrogen-Helium","Sulfuric Acid","Ammonia","Unknown"];
-    const waterOptions = ["Yes","No","Ice caps","Possible","Water vapor"];
-    const baseNames = ["Kepler","Trappist","Proxima","Gliese","HD","Tau","Luyten","Ross","Wolf"];
+    const atmospheres = ["Nitrogen-Oxygen", "Carbon Dioxide", "Methane", "Hydrogen-Helium", "Sulfuric Acid", "Ammonia", "Unknown"];
+    const waterOptions = ["Yes", "No", "Ice caps", "Possible", "Water vapor"];
+    const baseNames = ["Kepler", "Trappist", "Proxima", "Gliese", "HD", "Tau", "Luyten", "Ross", "Wolf"];
+    const types = ["Exoplaneta", "Planeta del Sistema Solar", "Estrella", "Cometa", "Asteroide"];
     const planets = [];
 
-    for(let i=0;i<count;i++){
-        const isExoplanet = Math.random() > 0.4;
-        const baseName = baseNames[Math.floor(Math.random()*baseNames.length)];
-        const idNum = Math.floor(Math.random()*1000)+1;
-        const suffix = String.fromCharCode(97 + Math.floor(Math.random()*3));
+    for (let i = 0; i < count; i++) {
+        const type = types[Math.floor(Math.random() * types.length)];
+        const isExoplanet = type === "Exoplaneta";
+        const baseName = baseNames[Math.floor(Math.random() * baseNames.length)];
+        const idNum = Math.floor(Math.random() * 1000) + 1;
+        const suffix = String.fromCharCode(97 + Math.floor(Math.random() * 3));
 
         planets.push({
             name: `${baseName}-${idNum}${suffix}`,
-            type,
+            type: type,
             exoplanet_value: isExoplanet,
-            density: (Math.random()*6+0.5).toFixed(1) + " g/cm³",
-            atmosphere: atmospheres[Math.floor(Math.random()*atmospheres.length)],
-            water_presence: waterOptions[Math.floor(Math.random()*waterOptions.length)],
-            distance: isExoplanet ? (Math.random()*2000+1).toFixed(2)+" light years" : (Math.random()*6+0.3).toFixed(1)+" billion km",
-            temperature: (Math.random()*400-200).toFixed(1)+"°C",
-            x: Math.random()*mapSize,   // coordenadas reales
-            y: Math.random()*mapSize,
-            size: 0.5 + Math.random()*1.5 // tamaño entre 0.5 y 2
+            density: (Math.random() * 6 + 0.5).toFixed(1) + " g/cm³",
+            atmosphere: atmospheres[Math.floor(Math.random() * atmospheres.length)],
+            water_presence: waterOptions[Math.floor(Math.random() * waterOptions.length)],
+            distance: isExoplanet
+                ? (Math.random() * 2000 + 1).toFixed(2) + " light years"
+                : (Math.random() * 6 + 0.3).toFixed(1) + " billion km",
+            temperature: (Math.random() * 400 - 200).toFixed(1) + "°C",
+            x: Math.random() * mapSize,
+            y: Math.random() * mapSize,
+            size: 0.5 + Math.random() * 1.5
         });
     }
-
     return planets;
 }
 
 // -----
 
-// Generar cantidad de planetas aleatorios
 const planetData = generatePlanets(500);
 
 // --- Nave ---
@@ -122,6 +73,7 @@ const nave = {
 };
 
 // --- Flecha (para cuando la nave sale de la vista) ---
+
 let arrowEl = document.createElement('div');
 arrowEl.id = 'nave-arrow';
 arrowEl.style.position = 'absolute';
@@ -133,6 +85,7 @@ arrowEl.style.display = 'none';
 starmapEl.appendChild(arrowEl);
 
 // --- Render principal ---
+
 function renderStarmap(planets) {
     starmapEl.innerHTML = '';
     starmapEl.appendChild(arrowEl);
@@ -140,6 +93,7 @@ function renderStarmap(planets) {
     const scale = starmapEl.clientWidth / viewSize;
 
     // --- Render nave ---
+
     const naveLeft = (nave.x - viewX) * scale;
     const naveTop = (nave.y - viewY) * scale;
     const naveRotation = nave.rotation || 0;
@@ -176,6 +130,7 @@ function renderStarmap(planets) {
     naveEl.style.position = 'absolute';
     naveEl.style.background = `url(${nave.image}) no-repeat center/contain`;
     naveEl.style.border = 'none';
+    naveEl.style.zIndex ='100';
     naveEl.style.transform = `
         translate(${naveLeft}px, ${naveTop}px)
         scale(${nave.size * scale / 60})
@@ -184,21 +139,17 @@ function renderStarmap(planets) {
     starmapEl.appendChild(naveEl);
 
     // --- Render planetas ---
-    planets.forEach((planet, index) => {
-        // Convertir coordenadas del planeta (0-1000) a la vista actual
-        const scale = starmapEl.clientWidth / viewSize; // píxeles por unidad
-        const left = (planet.x - viewX) * scale;
-        const top  = (planet.y - viewY) * scale;
 
-        // Solo renderizar si está dentro de la vista
-        if(left < -100 || left > starmapEl.clientWidth + 100) return;
-        if(top  < -100 || top  > starmapEl.clientHeight + 100) return;
+    planets.forEach((planet, index) => {
+        const left = (planet.x - viewX) * scale;
+        const top = (planet.y - viewY) * scale;
+
+        if (left < -100 || left > starmapEl.clientWidth + 100) return;
+        if (top < -100 || top > starmapEl.clientHeight + 100) return;
 
         const planetBtn = document.createElement('button');
         planetBtn.className = `planet-btn ${planet.exoplanet_value ? 'exoplanet' : 'non-exoplanet'}`;
-
-        // Tamaño aleatorio base
-        const planetScale = planet.size * scale / 60; // ajusta según tu CSS
+        const planetScale = planet.size * scale / 60;
         planetBtn.style.transform = `translate(${left}px, ${top}px) scale(${planetScale})`;
         planetBtn.style.position = 'absolute';
         planetBtn.dataset.index = index;
@@ -209,6 +160,7 @@ function renderStarmap(planets) {
 }
 
 // --- Movimiento de la nave hacia un planeta ---
+
 function moveShipToPlanet(planet, callback) {
     const steps = 80;
     let step = 0;
@@ -246,6 +198,7 @@ function moveShipToPlanet(planet, callback) {
 }
 
 // --- Zoom inicial ---
+
 function centerInitialZoom() {
     const centerX = mapSize / 2;
     const centerY = mapSize / 2;
@@ -273,6 +226,7 @@ function centerInitialZoom() {
 }
 
 // --- Drag y zoom ---
+
 let isDragging = false;
 let dragStart = { x: 0, y: 0 };
 let viewStart = { x: 0, y: 0 };
@@ -314,60 +268,41 @@ starmapEl.addEventListener('wheel', e => {
 });
 
 // --- Modal planeta ---
+
 function openModal(planet) {
+    moveShipToPlanet(planet, () => showPlanetModal(planet));
+}
+
+function showPlanetModal(planet) {
     planetNameEl.textContent = planet.name;
 
-    const colors = ["#2196f3", "#f44336", "#4caf50", "#ff9800", "#9c27b0"];
-    const randomColor = colors[Math.floor(Math.random() * colors.length)];
-
-    const gifContainer = `
-    <div class="planet-gif-wrapper" style="--overlay-color: ${randomColor};">
-        <img src="./Animated_rotation_of_Pluto.gif" alt="Planeta girando" class="planet-gif">
-        <div class="color-overlay"></div>
-    </div>
+    const randomHue = Math.floor(Math.random() * 360);
+    const gifHtml = `
+        <div class="planet-gif-wrapper" style="--hue: ${randomHue}deg;">
+            <img src="./Animated_rotation_of_Pluto.gif" alt="Planeta girando" class="planet-gif">
+        </div>
     `;
 
-    planetDetailsEl.innerHTML = gifContainer + `
-        <div class="planet-info">
-            <strong>Tipo:</strong> ${planet.exoplanet_value ? 'Exoplaneta' : 'Planeta del Sistema Solar'}
-        </div>
-        <div class="planet-info">
-            <strong>Densidad:</strong> ${planet.density}</div>
-        <div class="planet-info">
-            <strong>Atmósfera:</strong> ${planet.atmosphere}</div>
-        <div class="planet-info">
-            <strong>Presencia de agua:</strong> ${planet.water_presence}</div>
-        <div class="planet-info">
-            <strong>Distancia:</strong> ${planet.distance}</div>
-        <div class="planet-info">
-            <strong>Temperatura:</strong> ${planet.temperature}</div>
+    planetDetailsEl.innerHTML = `
+        ${gifHtml}
+        <div class="planet-info"><strong>Tipo:</strong> ${planet.type}</div>
+        <div class="planet-info"><strong>Densidad:</strong> ${planet.density}</div>
+        <div class="planet-info"><strong>Atmósfera:</strong> ${planet.atmosphere}</div>
+        <div class="planet-info"><strong>Presencia de agua:</strong> ${planet.water_presence}</div>
+        <div class="planet-info"><strong>Distancia:</strong> ${planet.distance}</div>
+        <div class="planet-info"><strong>Temperatura:</strong> ${planet.temperature}</div>
     `;
 
     modalEl.classList.add('active');
-
-    if (planet.exoplanet_value) {
-        addExoplanet(planet);
-    }
 }
 
-// Cerrar modal
 function closeModal() {
     modalEl.classList.remove('active');
 }
-
 closeModalBtn.addEventListener('click', closeModal);
-
-modalEl.addEventListener('click', (e) => {
-    if (e.target === modalEl) {
-        closeModal();
-    }
-});
-
-document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-        closeModal();
-    }
-});
+modalEl.addEventListener('click', e => { if (e.target === modalEl) closeModal(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
 // --- Inicializar ---
+
 centerInitialZoom();
