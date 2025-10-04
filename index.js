@@ -276,19 +276,19 @@ function getPlanetGif(planet) {
     switch (planet.type) {
         case "Exoplaneta":
         case "Planeta del Sistema Solar":
-            return "./Animated_rotation_of_Pluto.gif"; // el gif que ya usas
+            return "gifs/Animated_rotation_of_Pluto.gif"; // gif genérico
         case "Estrella":
-            return "./estrella.gif"; // cambia por tu gif de estrella
+            return "gifs/estrella.gif"; // cambia por tu gif de estrella
         case "Cometa":
-            return "./cometa.gif"; // gif de cometa
+            return "gifs/cometa.gif"; // gif de cometa
         case "Asteroide":
-            return "./asteroide.gif"; // gif de asteroide
+            return "gifs/asteroide.gif"; // gif de asteroide
         case "Galaxia":
-            return "./galaxia.gif"; // gif de galaxia
+            return "gifs/galaxia.gif"; // gif de galaxia
         case "AgujeroN":
-            return "./agujeroN.gif"; // gif de galaxia
+            return "gifs/agujeroN.gif"; // gif de galaxia
         default:
-            return "./Animated_rotation_of_Pluto.gif"; // fallback
+            return "gifs/Animated_rotation_of_Pluto.gif"; // fallback
     }
 }
 
