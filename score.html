@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Exoplanetas Descubiertos</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Orbitron', sans-serif;
+      background: radial-gradient(ellipse at center, #0a0a15 0%, #000 100%);
+      color: #00ffea;
+      overflow-x: hidden;
+    }
+
+    header {
+      text-align: center;
+      padding: 20px;
+      font-size: 24px;
+      letter-spacing: 1px;
+      border-bottom: 2px solid rgba(0,255,234,0.3);
+    }
+
+    #score-value {
+      font-size: 32px;
+      color: #00ffc8;
+      text-shadow: 0 0 8px #00ffc8;
+      margin-top: 10px;
+    }
+
+    table {
+      width: 90%;
+      margin: 40px auto;
+      border-collapse: collapse;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    th, td {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 12px 10px;
+      text-align: left;
+      font-size: 14px;
+    }
+
+    th {
+      background: rgba(0, 255, 234, 0.1);
+      text-transform: uppercase;
+    }
+
+    tr:hover {
+      background: rgba(0, 255, 234, 0.15);
+    }
+
+    #back-btn {
+      display: block;
+      width: fit-content;
+      margin: 30px auto;
+      text-decoration: none;
+      background: rgba(0, 255, 200, 0.3);
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: 8px;
+      transition: 0.2s;
+      font-size: 16px;
+    }
+
+    #back-btn:hover {
+      background: rgba(0, 255, 200, 0.6);
+      transform: scale(1.05);
+    }
+
+    #empty-msg {
+      text-align: center;
+      margin-top: 50px;
+      font-size: 18px;
+      opacity: 0.8;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    🌌 EXOPLANETAS DESCUBIERTOS 🌌
+    <div id="score-value"></div>
+  </header>
+
+  <main id="content">
+    <div id="empty-msg">Aún no has descubierto ningún exoplaneta...</div>
+    <table id="planet-table" style="display:none;">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Tipo</th>
+          <th>Densidad</th>
+          <th>Atmósfera</th>
+          <th>Agua</th>
+          <th>Distancia</th>
+          <th>Temperatura</th>
+          <th>Descubierto el</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </main>
+
+  <a id="back-btn" href="index.html">← Volver al Mapa Estelar</a>
+
+  <script>
+    // Cargar datos del almacenamiento
+    const score = parseInt(localStorage.getItem("score")) || 0;
+    const learnedPlanets = JSON.parse(localStorage.getItem("learnedPlanets")) || [];
+
+    document.getElementById("score-value").textContent = `SCORE TOTAL: ${score}`;
+
+    const table = document.getElementById("planet-table");
+    const tbody = table.querySelector("tbody");
+    const emptyMsg = document.getElementById("empty-msg");
+
+    if (learnedPlanets.length > 0) {
+      table.style.display = "table";
+      emptyMsg.style.display = "none";
+
+      learnedPlanets.forEach(p => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${p.name}</td>
+          <td>${p.type}</td>
+          <td>${p.density}</td>
+          <td>${p.atmosphere}</td>
+          <td>${p.water_presence}</td>
+          <td>${p.distance}</td>
+          <td>${p.temperature}</td>
+          <td>${p.discovery_date}</td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+  </script>
+
+</body>
+</html>
