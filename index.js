@@ -340,18 +340,50 @@ function loadPlanets() {
     }, 1000);
 }
 
-// Renderizar el mapa estelar
 function renderStarmap(planets) {
     starmapEl.innerHTML = '';
-    
+
+    const gridSize = 100; // Cuadrícula virtual 100x100
+    const marginPercent = 0.1; // 10% de margen en cada borde
+    const cellSize = 10; // Tamaño base de cada celda (px)
+    const usedPositions = new Set();
+
+    // Calcular límites con márgenes proporcionales
+    const minCoord = gridSize * marginPercent;
+    const maxCoord = gridSize * (1 - marginPercent);
+
     planets.forEach((planet, index) => {
+        let x, y, key;
+        do {
+            // 🔹 Genera posición aleatoria dentro del área central (80x80)
+            x = Math.floor(minCoord + Math.random() * (maxCoord - minCoord));
+            y = Math.floor(minCoord + Math.random() * (maxCoord - minCoord));
+            key = `${x},${y}`;
+        } while (usedPositions.has(key));
+
+        usedPositions.add(key);
+
+        // Posición en píxeles
+        const left = x * cellSize + Math.random() * 5;
+        const top = y * cellSize + Math.random() * 5;
+
+        // 🔹 Escala aleatoria entre 50% y 200%
+        const scale = 0.5 + Math.random() * 1.5;
+
         const btn = document.createElement('button');
         btn.className = `planet-btn ${planet.exoplanet_value ? 'exoplanet' : 'non-exoplanet'}`;
+        btn.style.position = 'absolute';
+        btn.style.left = `${left}px`;
+        btn.style.top = `${top}px`;
+        btn.style.transform = `scale(${scale})`;
         btn.setAttribute('aria-label', planet.name);
         btn.dataset.index = index;
-        
+
+        // 🔹 Brillo según tamaño (más grande = más brillante)
+        const brightness = 0.8 + (scale - 0.5) * 0.3;
+        btn.style.filter = `brightness(${brightness})`;
+
         btn.addEventListener('click', () => openModal(planet));
-        
         starmapEl.appendChild(btn);
     });
 }
