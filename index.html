@@ -13,10 +13,38 @@
     </header>
 
     <main>
-        <section>
+        <section style="position: relative;">
             <h2>Mapa Estelar Interactivo</h2>
+
             <div id="starmap" class="starmap-grid">
                 <div class="loading">Cargando planetas...</div>
+            </div>
+
+            <!-- Panel flotante afuera del #starmap -->
+            <div class="control-panel floating-panel">
+                <h3>Modelo de IA</h3>
+
+                <div class="panel-section">
+                    <h4>Cargar Datos</h4>
+                    <button id="addDataBtn">Agregar datos</button>
+                </div>
+
+                <div class="panel-section">
+                    <h4>Estadísticas</h4>
+                    <div id="stats">
+                        <p>Precisión: <span id="accuracy">-</span></p>
+                        <p>Recall: <span id="recall">-</span></p>
+                    </div>
+                </div>
+
+                <div class="panel-section">
+                    <h4>Hiperparámetros</h4>
+                    <label>Learning rate: <span id="lrVal">0.01</span></label>
+                    <input type="range" id="learningRate" min="0.001" max="0.1" step="0.001" value="0.01">
+
+                    <label>Epochs: <span id="epochsVal">10</span></label>
+                    <input type="range" id="epochs" min="1" max="100" step="1" value="10">
+                </div>
             </div>
         </section>
     </main>

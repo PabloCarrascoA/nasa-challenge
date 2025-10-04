@@ -174,3 +174,35 @@ document.addEventListener('keydown', (e) => {
 
 // Inicializar aplicación
 loadPlanets();
+
+const addDataBtn = document.getElementById('addDataBtn');
+const accuracyEl = document.getElementById('accuracy');
+const recallEl = document.getElementById('recall');
+const lrInput = document.getElementById('learningRate');
+const lrVal = document.getElementById('lrVal');
+const epochsInput = document.getElementById('epochs');
+const epochsVal = document.getElementById('epochsVal');
+
+addDataBtn.addEventListener('click', () => {
+    alert('Simulando la carga de nuevos datos...');
+    // Aquí podrías añadir planetas nuevos al starmap para simular "nuevo dataset"
+    const newPlanets = generatePlanets(50);
+    planetData.push(...newPlanets);
+    renderStarmap(planetData);
+
+    // Simular actualización de métricas
+    const randomAccuracy = (Math.random() * 0.2 + 0.8).toFixed(2);
+    const randomRecall = (Math.random() * 0.2 + 0.7).toFixed(2);
+    accuracyEl.textContent = randomAccuracy;
+    recallEl.textContent = randomRecall;
+});
+
+lrInput.addEventListener('input', () => {
+    lrVal.textContent = lrInput.value;
+    // Aquí puedes simular reentrenar modelo con nuevo learning rate
+});
+
+epochsInput.addEventListener('input', () => {
+    epochsVal.textContent = epochsInput.value;
+    // Aquí puedes simular reentrenar modelo con nuevo número de epochs
+});

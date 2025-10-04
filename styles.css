@@ -258,3 +258,54 @@ article {
     font-size: 1.5rem;
     color: #64b5f6;
 }
+/* Panel flotante dentro del mapa */
+.floating-panel {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 250px;
+    background: rgba(0,0,0,0.35); 
+    border: 2px solid #64b5f6;
+    border-radius: 15px;
+    padding: 1rem;
+    color: #e0e0e0;
+    backdrop-filter: blur(10px);
+    z-index: 500;
+}
+
+
+.floating-panel h3 {
+    text-align: center;
+    color: #64b5f6;
+    margin-bottom: 1rem;
+}
+
+.panel-section {
+    margin-bottom: 1.2rem;
+}
+
+.panel-section h4 {
+    margin-bottom: 0.4rem;
+    color: #2196f3;
+    font-size: 1.05rem;
+}
+
+.floating-panel button {
+    width: 100%;
+    padding: 0.4rem;
+    border: none;
+    border-radius: 8px;
+    background-color: #2196f3;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.floating-panel button:hover {
+    background-color: #64b5f6;
+}
+
+.floating-panel input[type=range] {
+    width: 100%;
+    margin-top: 0.2rem;
+}
