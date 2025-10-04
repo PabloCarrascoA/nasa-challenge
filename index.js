@@ -29,7 +29,7 @@ function generatePlanets(count) {
     const atmospheres = ["Nitrogen-Oxygen", "Carbon Dioxide", "Methane", "Hydrogen-Helium", "Sulfuric Acid", "Ammonia", "Unknown"];
     const waterOptions = ["Yes", "No", "Ice caps", "Possible", "Water vapor"];
     const baseNames = ["Kepler", "Trappist", "Proxima", "Gliese", "HD", "Tau", "Luyten", "Ross", "Wolf"];
-    const types = ["Exoplaneta", "Planeta del Sistema Solar", "Estrella", "Cometa", "Asteroide"];
+    const types = ["Exoplaneta", "Planeta del Sistema Solar", "Estrella", "Cometa", "Asteroide","Galaxia","AgujeroN"];
     const planets = [];
 
     for (let i = 0; i < count; i++) {
@@ -272,13 +272,34 @@ function openModal(planet) {
     moveShipToPlanet(planet, () => showPlanetModal(planet));
 }
 
+function getPlanetGif(planet) {
+    switch (planet.type) {
+        case "Exoplaneta":
+        case "Planeta del Sistema Solar":
+            return "./Animated_rotation_of_Pluto.gif"; // el gif que ya usas
+        case "Estrella":
+            return "./estrella.gif"; // cambia por tu gif de estrella
+        case "Cometa":
+            return "./cometa.gif"; // gif de cometa
+        case "Asteroide":
+            return "./asteroide.gif"; // gif de asteroide
+        case "Galaxia":
+            return "./galaxia.gif"; // gif de galaxia
+        case "AgujeroN":
+            return "./agujeroN.gif"; // gif de galaxia
+        default:
+            return "./Animated_rotation_of_Pluto.gif"; // fallback
+    }
+}
+
 function showPlanetModal(planet) {
     planetNameEl.textContent = planet.name;
 
     const randomHue = Math.floor(Math.random() * 360);
+    const gifUrl = getPlanetGif(planet);
     const gifHtml = `
         <div class="planet-gif-wrapper" style="--hue: ${randomHue}deg;">
-            <img src="./Animated_rotation_of_Pluto.gif" alt="Planeta girando" class="planet-gif">
+            <img src="${gifUrl}" alt="${planet.type}" class="planet-gif">
         </div>
     `;
 
@@ -293,10 +314,7 @@ function showPlanetModal(planet) {
     `;
 
     modalEl.classList.add('active');
-    if (planet.exoplanet_value === true) {
-        addExoplanet(planet);
-    }
-    
+    addExoplanet(planet);
 }
 
 function closeModal() {
