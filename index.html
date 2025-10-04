@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planet Phisers - Space Apps Challenge</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Planet Fhisers</h1>
+        <p>Space Apps Challenge - Interactive Star Map</p>
+    </header>
+
+    <main>
+        <section>
+            <h2>Mapa Estelar Interactivo</h2>
+            <div id="starmap" class="starmap-grid">
+                <div class="loading">Cargando planetas...</div>
+            </div>
+        </section>
+    </main>
+
+    <!-- pop-up para detalles del planeta -->
+
+    <aside class="modal-overlay" id="modal">
+        <div class="modal-content">
+            <button class="close-btn" id="closeModal">×</button>
+            <div class="modal-header">
+                <h3 id="planetName"></h3>
+            </div>
+            <article id="planetDetails"></article>
+        </div>
+    </aside>
+    
+     <script src="index.js"></script>
+</body>
+</html>
