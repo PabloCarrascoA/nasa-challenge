@@ -5,333 +5,44 @@ const planetNameEl = document.getElementById('planetName');
 const planetDetailsEl = document.getElementById('planetDetails');
 const closeModalBtn = document.getElementById('closeModal');
 
-// Datos de ejemplo (simula una respuesta de IA)
-const planetData = [
-    {
-        name: "Kepler-22b",
-        exoplanet_value: true,
-        density: "5.5 g/cm³",
-        atmosphere: "Nitrogen-Oxygen",
-        water_presence: "Yes",
-        distance: "600 light years",
-        temperature: "22°C (habitable zone)"
-    },
-    {
-        name: "Mars",
-        exoplanet_value: false,
-        density: "3.9 g/cm³",
-        atmosphere: "Carbon Dioxide",
-        water_presence: "Ice caps",
-        distance: "225 million km",
-        temperature: "-63°C"
-    },
-    {
-        name: "Proxima Centauri b",
-        exoplanet_value: true,
-        density: "5.4 g/cm³",
-        atmosphere: "Unknown",
-        water_presence: "Possible",
-        distance: "4.24 light years",
-        temperature: "-39°C to 30°C"
-    },
-    {
-        name: "Venus",
-        exoplanet_value: false,
-        density: "5.2 g/cm³",
-        atmosphere: "Carbon Dioxide, Sulfuric Acid",
-        water_presence: "No",
-        distance: "108 million km",
-        temperature: "464°C"
-    },
-    {
-        name: "TRAPPIST-1e",
-        exoplanet_value: true,
-        density: "5.0 g/cm³",
-        atmosphere: "Potentially habitable",
-        water_presence: "Likely",
-        distance: "39 light years",
-        temperature: "-22°C (habitable zone)"
-    },
-    {
-        name: "Jupiter",
-        exoplanet_value: false,
-        density: "1.3 g/cm³",
-        atmosphere: "Hydrogen, Helium",
-        water_presence: "Traces in clouds",
-        distance: "778 million km",
-        temperature: "-108°C"
-    },
-    {
-        name: "HD 209458 b",
-        exoplanet_value: true,
-        density: "0.4 g/cm³",
-        atmosphere: "Hydrogen, Sodium",
-        water_presence: "Water vapor detected",
-        distance: "159 light years",
-        temperature: "1000°C"
-    },
-    {
-        name: "Earth",
-        exoplanet_value: false,
-        density: "5.5 g/cm³",
-        atmosphere: "Nitrogen, Oxygen",
-        water_presence: "Yes (71% surface)",
-        distance: "0 km (home)",
-        temperature: "15°C"
-    },
-    {
-        name: "K2-18b",
-        exoplanet_value: true,
-        density: "3.3 g/cm³",
-        atmosphere: "Hydrogen, Water vapor",
-        water_presence: "Yes",
-        distance: "124 light years",
-        temperature: "-73°C to 47°C"
-    },
-    {
-        name: "Saturn",
-        exoplanet_value: false,
-        density: "0.7 g/cm³",
-        atmosphere: "Hydrogen, Helium",
-        water_presence: "Ice in rings",
-        distance: "1.4 billion km",
-        temperature: "-139°C"
-    },
-    {
-        name: "55 Cancri e",
-        exoplanet_value: true,
-        density: "5.9 g/cm³",
-        atmosphere: "Unknown",
-        water_presence: "Unlikely (too hot)",
-        distance: "41 light years",
-        temperature: "2000°C"
-    },
-    {
-        name: "Neptune",
-        exoplanet_value: false,
-        density: "1.6 g/cm³",
-        atmosphere: "Hydrogen, Helium, Methane",
-        water_presence: "Ice/water mantle",
-        distance: "4.5 billion km",
-        temperature: "-201°C"
-    },
-    {
-        name: "Kepler-22b",
-        exoplanet_value: true,
-        density: "5.5 g/cm³",
-        atmosphere: "Nitrogen-Oxygen",
-        water_presence: "Yes",
-        distance: "600 light years",
-        temperature: "22°C (habitable zone)"
-    },
-    {
-        name: "Mars",
-        exoplanet_value: false,
-        density: "3.9 g/cm³",
-        atmosphere: "Carbon Dioxide",
-        water_presence: "Ice caps",
-        distance: "225 million km",
-        temperature: "-63°C"
-    },
-    {
-        name: "Proxima Centauri b",
-        exoplanet_value: true,
-        density: "5.4 g/cm³",
-        atmosphere: "Unknown",
-        water_presence: "Possible",
-        distance: "4.24 light years",
-        temperature: "-39°C to 30°C"
-    },
-    {
-        name: "Venus",
-        exoplanet_value: false,
-        density: "5.2 g/cm³",
-        atmosphere: "Carbon Dioxide, Sulfuric Acid",
-        water_presence: "No",
-        distance: "108 million km",
-        temperature: "464°C"
-    },
-    {
-        name: "TRAPPIST-1e",
-        exoplanet_value: true,
-        density: "5.0 g/cm³",
-        atmosphere: "Potentially habitable",
-        water_presence: "Likely",
-        distance: "39 light years",
-        temperature: "-22°C (habitable zone)"
-    },
-    {
-        name: "Jupiter",
-        exoplanet_value: false,
-        density: "1.3 g/cm³",
-        atmosphere: "Hydrogen, Helium",
-        water_presence: "Traces in clouds",
-        distance: "778 million km",
-        temperature: "-108°C"
-    },
-    {
-        name: "HD 209458 b",
-        exoplanet_value: true,
-        density: "0.4 g/cm³",
-        atmosphere: "Hydrogen, Sodium",
-        water_presence: "Water vapor detected",
-        distance: "159 light years",
-        temperature: "1000°C"
-    },
-    {
-        name: "Earth",
-        exoplanet_value: false,
-        density: "5.5 g/cm³",
-        atmosphere: "Nitrogen, Oxygen",
-        water_presence: "Yes (71% surface)",
-        distance: "0 km (home)",
-        temperature: "15°C"
-    },
-    {
-        name: "K2-18b",
-        exoplanet_value: true,
-        density: "3.3 g/cm³",
-        atmosphere: "Hydrogen, Water vapor",
-        water_presence: "Yes",
-        distance: "124 light years",
-        temperature: "-73°C to 47°C"
-    },
-    {
-        name: "Saturn",
-        exoplanet_value: false,
-        density: "0.7 g/cm³",
-        atmosphere: "Hydrogen, Helium",
-        water_presence: "Ice in rings",
-        distance: "1.4 billion km",
-        temperature: "-139°C"
-    },
-    {
-        name: "55 Cancri e",
-        exoplanet_value: true,
-        density: "5.9 g/cm³",
-        atmosphere: "Unknown",
-        water_presence: "Unlikely (too hot)",
-        distance: "41 light years",
-        temperature: "2000°C"
-    },
-    {
-        name: "Neptune",
-        exoplanet_value: false,
-        density: "1.6 g/cm³",
-        atmosphere: "Hydrogen, Helium, Methane",
-        water_presence: "Ice/water mantle",
-        distance: "4.5 billion km",
-        temperature: "-201°C"
-    },
-    {
-        name: "Kepler-22b",
-        exoplanet_value: true,
-        density: "5.5 g/cm³",
-        atmosphere: "Nitrogen-Oxygen",
-        water_presence: "Yes",
-        distance: "600 light years",
-        temperature: "22°C (habitable zone)"
-    },
-    {
-        name: "Mars",
-        exoplanet_value: false,
-        density: "3.9 g/cm³",
-        atmosphere: "Carbon Dioxide",
-        water_presence: "Ice caps",
-        distance: "225 million km",
-        temperature: "-63°C"
-    },
-    {
-        name: "Proxima Centauri b",
-        exoplanet_value: true,
-        density: "5.4 g/cm³",
-        atmosphere: "Unknown",
-        water_presence: "Possible",
-        distance: "4.24 light years",
-        temperature: "-39°C to 30°C"
-    },
-    {
-        name: "Venus",
-        exoplanet_value: false,
-        density: "5.2 g/cm³",
-        atmosphere: "Carbon Dioxide, Sulfuric Acid",
-        water_presence: "No",
-        distance: "108 million km",
-        temperature: "464°C"
-    },
-    {
-        name: "TRAPPIST-1e",
-        exoplanet_value: true,
-        density: "5.0 g/cm³",
-        atmosphere: "Potentially habitable",
-        water_presence: "Likely",
-        distance: "39 light years",
-        temperature: "-22°C (habitable zone)"
-    },
-    {
-        name: "Jupiter",
-        exoplanet_value: false,
-        density: "1.3 g/cm³",
-        atmosphere: "Hydrogen, Helium",
-        water_presence: "Traces in clouds",
-        distance: "778 million km",
-        temperature: "-108°C"
-    },
-    {
-        name: "HD 209458 b",
-        exoplanet_value: true,
-        density: "0.4 g/cm³",
-        atmosphere: "Hydrogen, Sodium",
-        water_presence: "Water vapor detected",
-        distance: "159 light years",
-        temperature: "1000°C"
-    },
-    {
-        name: "Earth",
-        exoplanet_value: false,
-        density: "5.5 g/cm³",
-        atmosphere: "Nitrogen, Oxygen",
-        water_presence: "Yes (71% surface)",
-        distance: "0 km (home)",
-        temperature: "15°C"
-    },
-    {
-        name: "K2-18b",
-        exoplanet_value: true,
-        density: "3.3 g/cm³",
-        atmosphere: "Hydrogen, Water vapor",
-        water_presence: "Yes",
-        distance: "124 light years",
-        temperature: "-73°C to 47°C"
-    },
-    {
-        name: "Saturn",
-        exoplanet_value: false,
-        density: "0.7 g/cm³",
-        atmosphere: "Hydrogen, Helium",
-        water_presence: "Ice in rings",
-        distance: "1.4 billion km",
-        temperature: "-139°C"
-    },
-    {
-        name: "55 Cancri e",
-        exoplanet_value: true,
-        density: "5.9 g/cm³",
-        atmosphere: "Unknown",
-        water_presence: "Unlikely (too hot)",
-        distance: "41 light years",
-        temperature: "2000°C"
-    },
-    {
-        name: "Neptune",
-        exoplanet_value: false,
-        density: "1.6 g/cm³",
-        atmosphere: "Hydrogen, Helium, Methane",
-        water_presence: "Ice/water mantle",
-        distance: "4.5 billion km",
-        temperature: "-201°C"
+let viewX = 0;       // esquina superior izquierda de la vista
+let viewY = 0;
+let viewSize = 100;  // tamaño de la vista inicial (100x100 unidades)
+const mapSize = 1000; // tamaño real del mapa
+
+// --- Generador procedural de planetas ---
+function generatePlanets(count) {
+    const atmospheres = ["Nitrogen-Oxygen","Carbon Dioxide","Methane","Hydrogen-Helium","Sulfuric Acid","Ammonia","Unknown"];
+    const waterOptions = ["Yes","No","Ice caps","Possible","Water vapor"];
+    const baseNames = ["Kepler","Trappist","Proxima","Gliese","HD","Tau","Luyten","Ross","Wolf"];
+    const planets = [];
+
+    for(let i=0;i<count;i++){
+        const isExoplanet = Math.random() > 0.4;
+        const baseName = baseNames[Math.floor(Math.random()*baseNames.length)];
+        const idNum = Math.floor(Math.random()*1000)+1;
+        const suffix = String.fromCharCode(97 + Math.floor(Math.random()*3));
+
+        planets.push({
+            name:`${baseName}-${idNum}${suffix}`,
+            exoplanet_value: isExoplanet,
+            density: (Math.random()*6+0.5).toFixed(1) + " g/cm³",
+            atmosphere: atmospheres[Math.floor(Math.random()*atmospheres.length)],
+            water_presence: waterOptions[Math.floor(Math.random()*waterOptions.length)],
+            distance: isExoplanet ? (Math.random()*2000+1).toFixed(2)+" light years" : (Math.random()*6+0.3).toFixed(1)+" billion km",
+            temperature: (Math.random()*400-200).toFixed(1)+"°C",
+            x: Math.random()*mapSize,   // coordenadas reales
+            y: Math.random()*mapSize,
+            size: 0.5 + Math.random()*1.5 // tamaño entre 0.5 y 2
+        });
     }
-];
+
+    return planets;
+}
+
+// Generar cantidad de planetas aleatorios
+const planetData = generatePlanets(500);
+
 
 // Simular carga de datos
 function loadPlanets() {
@@ -340,51 +51,72 @@ function loadPlanets() {
     }, 1000);
 }
 
+starmapEl.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    const zoomFactor = 1.1;
+    if(e.deltaY < 0){
+        // hacer zoom in
+        viewSize /= zoomFactor;
+    } else {
+        // hacer zoom out
+        viewSize *= zoomFactor;
+        if(viewSize > mapSize) viewSize = mapSize; // límite
+    }
+    renderStarmap(planetData);
+});
+let isDragging = false;
+let dragStart = {x:0, y:0};
+let viewStart = {x:0, y:0};
+
+starmapEl.addEventListener('mousedown', (e)=>{
+    isDragging = true;
+    dragStart = {x: e.clientX, y: e.clientY};
+    viewStart = {x: viewX, y: viewY};
+    starmapEl.style.cursor = 'grabbing';
+});
+
+document.addEventListener('mousemove', (e)=>{
+    if(!isDragging) return;
+    const scale = viewSize / starmapEl.clientWidth;
+    viewX = viewStart.x - (e.clientX - dragStart.x)*scale;
+    viewY = viewStart.y - (e.clientY - dragStart.y)*scale;
+
+    // Limitar para que no se salga del mapa
+    viewX = Math.max(0, Math.min(mapSize - viewSize, viewX));
+    viewY = Math.max(0, Math.min(mapSize - viewSize, viewY));
+
+    renderStarmap(planetData);
+});
+
+document.addEventListener('mouseup', ()=>{
+    isDragging = false;
+    starmapEl.style.cursor = 'grab';
+});
+
 function renderStarmap(planets) {
     starmapEl.innerHTML = '';
-
-    const gridSize = 100; // Cuadrícula virtual 100x100
-    const marginPercent = 0.1; // 10% de margen en cada borde
-    const cellSize = 10; // Tamaño base de cada celda (px)
-    const usedPositions = new Set();
-
-    // Calcular límites con márgenes proporcionales
-    const minCoord = gridSize * marginPercent;
-    const maxCoord = gridSize * (1 - marginPercent);
-
+    
     planets.forEach((planet, index) => {
-        let x, y, key;
-        do {
-            // 🔹 Genera posición aleatoria dentro del área central (80x80)
-            x = Math.floor(minCoord + Math.random() * (maxCoord - minCoord));
-            y = Math.floor(minCoord + Math.random() * (maxCoord - minCoord));
-            key = `${x},${y}`;
-        } while (usedPositions.has(key));
+        // Convertir coordenadas del planeta (0-1000) a la vista actual
+        const scale = starmapEl.clientWidth / viewSize; // píxeles por unidad
+        const left = (planet.x - viewX) * scale;
+        const top  = (planet.y - viewY) * scale;
 
-        usedPositions.add(key);
+        // Solo renderizar si está dentro de la vista
+        if(left < -100 || left > starmapEl.clientWidth + 100) return;
+        if(top  < -100 || top  > starmapEl.clientHeight + 100) return;
 
-        // Posición en píxeles
-        const left = x * cellSize + Math.random() * 5;
-        const top = y * cellSize + Math.random() * 5;
+        const planetBtn = document.createElement('button');
+        planetBtn.className = `planet-btn ${planet.exoplanet_value ? 'exoplanet' : 'non-exoplanet'}`;
 
-        // 🔹 Escala aleatoria entre 50% y 200%
-        const scale = 0.5 + Math.random() * 1.5;
+        // Tamaño aleatorio base
+        const planetScale = planet.size * scale / 60; // ajusta según tu CSS
+        planetBtn.style.transform = `translate(${left}px, ${top}px) scale(${planetScale})`;
+        planetBtn.style.position = 'absolute';
+        planetBtn.dataset.index = index;
 
-        const btn = document.createElement('button');
-        btn.className = `planet-btn ${planet.exoplanet_value ? 'exoplanet' : 'non-exoplanet'}`;
-        btn.style.position = 'absolute';
-        btn.style.left = `${left}px`;
-        btn.style.top = `${top}px`;
-        btn.style.transform = `scale(${scale})`;
-        btn.setAttribute('aria-label', planet.name);
-        btn.dataset.index = index;
-
-        // 🔹 Brillo según tamaño (más grande = más brillante)
-        const brightness = 0.8 + (scale - 0.5) * 0.3;
-        btn.style.filter = `brightness(${brightness})`;
-
-        btn.addEventListener('click', () => openModal(planet));
-        starmapEl.appendChild(btn);
+        planetBtn.addEventListener('click', () => openModal(planet));
+        starmapEl.appendChild(planetBtn);
     });
 }
 

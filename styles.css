@@ -77,14 +77,15 @@ h2 {
 
 .starmap-grid {
     position: relative;
-    width: 1000px; /* tamaño del mapa, puedes ampliar si quieres */
+    width: 1000px;
     height: 1000px;
     margin: 0 auto;
     border: 1px solid rgba(100, 181, 246, 0.3);
-    border-radius: 15px;
+    overflow: hidden; /* importante para que no se vea fuera de la ventana */
     background: radial-gradient(circle at center, rgba(10, 25, 41, 0.8), rgba(0,0,0,0.9));
-    overflow: hidden;
+    cursor: grab;
 }
+
 
 .planet-btn {
     width: 60px;
