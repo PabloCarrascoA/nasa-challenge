@@ -15,16 +15,22 @@ function generatePlanets(count) {
     const atmospheres = ["Nitrogen-Oxygen","Carbon Dioxide","Methane","Hydrogen-Helium","Sulfuric Acid","Ammonia","Unknown"];
     const waterOptions = ["Yes","No","Ice caps","Possible","Water vapor"];
     const baseNames = ["Kepler","Trappist","Proxima","Gliese","HD","Tau","Luyten","Ross","Wolf"];
+    const types = ["Exoplaneta", "Planeta del Sistema Solar", "Estrella", "Cometa", "Asteroide"];
     const planets = [];
 
     for(let i=0;i<count;i++){
-        const isExoplanet = Math.random() > 0.4;
+        const type = types[Math.floor(Math.random()*types.length)];
+        var isExoplanet = false;
+        if (type === "Exoplaneta") {
+            isExoplanet = true;
+        }
         const baseName = baseNames[Math.floor(Math.random()*baseNames.length)];
         const idNum = Math.floor(Math.random()*1000)+1;
         const suffix = String.fromCharCode(97 + Math.floor(Math.random()*3));
 
         planets.push({
             name:`${baseName}-${idNum}${suffix}`,
+            type: type,
             exoplanet_value: isExoplanet,
             density: (Math.random()*6+0.5).toFixed(1) + " g/cm³",
             atmosphere: atmospheres[Math.floor(Math.random()*atmospheres.length)],
@@ -124,34 +130,37 @@ function renderStarmap(planets) {
 function openModal(planet) {
     planetNameEl.textContent = planet.name;
 
-    const colors = ["#2196f3", "#f44336", "#4caf50", "#ff9800", "#9c27b0"];
-    const randomColor = colors[Math.floor(Math.random() * colors.length)];
+    // Generar un color aleatorio vía hue
+    const randomHue = Math.floor(Math.random() * 360); // 0 a 360 grados
 
-    const gifContainer = `
-    <div class="planet-gif-wrapper" style="--overlay-color: ${randomColor};">
-        <img src="./Animated_rotation_of_Pluto.gif" alt="Planeta girando" class="planet-gif">
-        <div class="color-overlay"></div>
-    </div>
+    // Crear el GIF con hue dinámico
+    const gifHtml = `
+      <div class="planet-gif-wrapper" style="--hue: ${randomHue}deg;">
+          <img src="./Animated_rotation_of_Pluto.gif" alt="Planeta girando" class="planet-gif">
+      </div>
     `;
 
-    planetDetailsEl.innerHTML = gifContainer + `
-        <div class="planet-info">
-            <strong>Tipo:</strong> ${planet.exoplanet_value ? 'Exoplaneta' : 'Planeta del Sistema Solar'}
-        </div>
-        <div class="planet-info">
-            <strong>Densidad:</strong> ${planet.density}</div>
-        <div class="planet-info">
-            <strong>Atmósfera:</strong> ${planet.atmosphere}</div>
-        <div class="planet-info">
-            <strong>Presencia de agua:</strong> ${planet.water_presence}</div>
-        <div class="planet-info">
-            <strong>Distancia:</strong> ${planet.distance}</div>
-        <div class="planet-info">
-            <strong>Temperatura:</strong> ${planet.temperature}</div>
+    // Insertar GIF + info del planeta en un solo innerHTML
+    planetDetailsEl.innerHTML = `
+      ${gifHtml}
+      <div class="planet-info">
+          <strong>Tipo:</strong> ${planet.exoplanet_value ? 'Exoplaneta' : 'Planeta del Sistema Solar'}
+      </div>
+      <div class="planet-info">
+          <strong>Densidad:</strong> ${planet.density}</div>
+      <div class="planet-info">
+          <strong>Atmósfera:</strong> ${planet.atmosphere}</div>
+      <div class="planet-info">
+          <strong>Presencia de agua:</strong> ${planet.water_presence}</div>
+      <div class="planet-info">
+          <strong>Distancia:</strong> ${planet.distance}</div>
+      <div class="planet-info">
+          <strong>Temperatura:</strong> ${planet.temperature}</div>
     `;
 
     modalEl.classList.add('active');
 }
+
 
 // Cerrar modal
 function closeModal() {

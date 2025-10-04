@@ -163,6 +163,8 @@ h2 {
     border: 2px solid #2196f3;
     animation: slideIn 0.3s ease;
     position: relative;
+    max-height: 90vh;
+    overflow-y: auto;
 }
 
 @keyframes slideIn {
@@ -194,24 +196,17 @@ article {
 
 .planet-gif-wrapper {
     position: relative;
-    width: 250px;
-    height: 250px;
+    width: 300px;
+    height: 300px;
     margin: 0 auto 1rem auto;
 }
 
 .planet-gif-wrapper img.planet-gif {
-    width: 100%;
-    height: 100%;
+    width: 250px;
+    height: 250px;
     display: block;
-}
-
-.planet-gif-wrapper .color-overlay {
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background-color: var(--overlay-color);
-    mix-blend-mode: color; /* aplica color sobre el gif */
-    pointer-events: none;
+    filter: hue-rotate(var(--hue, 0deg));
+    margin: 0 auto 1rem auto;
 }
 
 .planet-info {
