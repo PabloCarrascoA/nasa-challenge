@@ -99,21 +99,18 @@ h2 {
     }
 }
 
-.spaceship {
+.ship {
     position: absolute;
-    width: 60px;
-    height: 60px;
+    width: 50px;
+    height: 50px;
     background: url('images/navecita.png') no-repeat center/contain;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 1000; /* encima de los planetas */
-    pointer-events: none; /* no bloquea clics */
+    pointer-events: none;
+    transition: transform 0.1s linear;
 }
 
 .planet-btn {
-    width: 60px;
-    height: 60px;
+    width: 200px;
+    height: 200px;
     border-radius: 50%;
     border: 2px solid rgba(255, 255, 255, 0.3);
     cursor: pointer;
