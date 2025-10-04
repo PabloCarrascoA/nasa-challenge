@@ -81,9 +81,9 @@ h2 {
     height: 1000px;
     margin: 0 auto;
     border: 1px solid rgba(100, 181, 246, 0.3);
-    overflow: hidden; /* importante para que no se vea fuera de la ventana */
+    border-radius: 15px;
     background: radial-gradient(circle at center, rgba(10, 25, 41, 0.8), rgba(0,0,0,0.9));
-    cursor: grab;
+    overflow: hidden;
 }
 
 
