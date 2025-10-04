@@ -39,6 +39,7 @@ function updateScoreDisplay() {
 // Guardar un exoplaneta descubierto
 
 function addExoplanet(planet) {
+    if (!planet.exoplanet_value) return;
     if (learnedPlanets.find(p => p.name === planet.name)) {
         return; // ya existe
     }
