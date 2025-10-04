@@ -144,7 +144,7 @@ function openModal(planet) {
     planetDetailsEl.innerHTML = `
       ${gifHtml}
       <div class="planet-info">
-          <strong>Tipo:</strong> ${planet.exoplanet_value ? 'Exoplaneta' : 'Planeta del Sistema Solar'}
+          <strong>Tipo:</strong> ${planet.type}
       </div>
       <div class="planet-info">
           <strong>Densidad:</strong> ${planet.density}</div>
