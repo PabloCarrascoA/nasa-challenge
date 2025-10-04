@@ -25,7 +25,7 @@ function updateScoreDisplay() {
             zIndex: "9999"
         });
         scoreLink.addEventListener("mouseenter", () => {
-            scoreLink.style.background = "rgba(0, 255, 200, 0.6)";
+            scoreLink.style.background = "rgba(7, 7, 7, 0.6)";
         });
         scoreLink.addEventListener("mouseleave", () => {
             scoreLink.style.background = "rgba(0, 0, 0, 0.4)";
