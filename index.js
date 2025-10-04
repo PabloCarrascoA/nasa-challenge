@@ -15,16 +15,22 @@ function generatePlanets(count) {
     const atmospheres = ["Nitrogen-Oxygen","Carbon Dioxide","Methane","Hydrogen-Helium","Sulfuric Acid","Ammonia","Unknown"];
     const waterOptions = ["Yes","No","Ice caps","Possible","Water vapor"];
     const baseNames = ["Kepler","Trappist","Proxima","Gliese","HD","Tau","Luyten","Ross","Wolf"];
+    const types = ["Exoplaneta", "Planeta del Sistema Solar", "Estrella", "Cometa", "Asteroide"];
     const planets = [];
 
     for(let i=0;i<count;i++){
-        const isExoplanet = Math.random() > 0.4;
+        const type = types[Math.floor(Math.random()*types.length)];
+        var isExoplanet = false;
+        if (type === "Exoplaneta") {
+            isExoplanet = true;
+        }
         const baseName = baseNames[Math.floor(Math.random()*baseNames.length)];
         const idNum = Math.floor(Math.random()*1000)+1;
         const suffix = String.fromCharCode(97 + Math.floor(Math.random()*3));
 
         planets.push({
             name:`${baseName}-${idNum}${suffix}`,
+            type: type,
             exoplanet_value: isExoplanet,
             density: (Math.random()*6+0.5).toFixed(1) + " g/cm³",
             atmosphere: atmospheres[Math.floor(Math.random()*atmospheres.length)],
@@ -136,7 +142,7 @@ function openModal(planet) {
 
     planetDetailsEl.innerHTML = gifContainer + `
         <div class="planet-info">
-            <strong>Tipo:</strong> ${planet.exoplanet_value ? 'Exoplaneta' : 'Planeta del Sistema Solar'}
+            <strong>Tipo:</strong> ${planet.type}
         </div>
         <div class="planet-info">
             <strong>Densidad:</strong> ${planet.density}</div>
