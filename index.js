@@ -124,30 +124,32 @@ function renderStarmap(planets) {
 function openModal(planet) {
     planetNameEl.textContent = planet.name;
 
-    const colors = ["#2196f3", "#f44336", "#4caf50", "#ff9800", "#9c27b0"];
-    const randomColor = colors[Math.floor(Math.random() * colors.length)];
+    // Generar un color aleatorio vía hue
+    const randomHue = Math.floor(Math.random() * 360); // 0 a 360 grados
 
-    const gifContainer = `
-    <div class="planet-gif-wrapper" style="--overlay-color: ${randomColor};">
-        <img src="./Animated_rotation_of_Pluto.gif" alt="Planeta girando" class="planet-gif">
-        <div class="color-overlay"></div>
-    </div>
+    // Crear el GIF con hue dinámico
+    const gifHtml = `
+      <div class="planet-gif-wrapper" style="--hue: ${randomHue}deg;">
+          <img src="./Animated_rotation_of_Pluto.gif" alt="Planeta girando" class="planet-gif">
+      </div>
     `;
 
-    planetDetailsEl.innerHTML = gifContainer + `
-        <div class="planet-info">
-            <strong>Tipo:</strong> ${planet.exoplanet_value ? 'Exoplaneta' : 'Planeta del Sistema Solar'}
-        </div>
-        <div class="planet-info">
-            <strong>Densidad:</strong> ${planet.density}</div>
-        <div class="planet-info">
-            <strong>Atmósfera:</strong> ${planet.atmosphere}</div>
-        <div class="planet-info">
-            <strong>Presencia de agua:</strong> ${planet.water_presence}</div>
-        <div class="planet-info">
-            <strong>Distancia:</strong> ${planet.distance}</div>
-        <div class="planet-info">
-            <strong>Temperatura:</strong> ${planet.temperature}</div>
+    // Insertar GIF + info del planeta en un solo innerHTML
+    planetDetailsEl.innerHTML = `
+      ${gifHtml}
+      <div class="planet-info">
+          <strong>Tipo:</strong> ${planet.exoplanet_value ? 'Exoplaneta' : 'Planeta del Sistema Solar'}
+      </div>
+      <div class="planet-info">
+          <strong>Densidad:</strong> ${planet.density}</div>
+      <div class="planet-info">
+          <strong>Atmósfera:</strong> ${planet.atmosphere}</div>
+      <div class="planet-info">
+          <strong>Presencia de agua:</strong> ${planet.water_presence}</div>
+      <div class="planet-info">
+          <strong>Distancia:</strong> ${planet.distance}</div>
+      <div class="planet-info">
+          <strong>Temperatura:</strong> ${planet.temperature}</div>
     `;
 
     modalEl.classList.add('active');

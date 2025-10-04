@@ -200,15 +200,7 @@ article {
     width: 100%;
     height: 100%;
     display: block;
-}
-
-.planet-gif-wrapper .color-overlay {
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background-color: var(--overlay-color);
-    mix-blend-mode: color; /* aplica color sobre el gif */
-    pointer-events: none;
+    filter: hue-rotate(var(--hue, 0deg));
 }
 
 .planet-info {
