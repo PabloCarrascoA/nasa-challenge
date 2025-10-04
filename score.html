@@ -108,37 +108,8 @@
 
   <a id="back-btn" href="index.html">← Volver al Mapa Estelar</a>
 
-  <script>
-    // Cargar datos del almacenamiento
-    const score = parseInt(localStorage.getItem("score")) || 0;
-    const learnedPlanets = JSON.parse(localStorage.getItem("learnedPlanets")) || [];
-
-    document.getElementById("score-value").textContent = `SCORE TOTAL: ${score}`;
-
-    const table = document.getElementById("planet-table");
-    const tbody = table.querySelector("tbody");
-    const emptyMsg = document.getElementById("empty-msg");
-
-    if (learnedPlanets.length > 0) {
-      table.style.display = "table";
-      emptyMsg.style.display = "none";
-
-      learnedPlanets.forEach(p => {
-        const row = document.createElement("tr");
-        row.innerHTML = `
-          <td>${p.name}</td>
-          <td>${p.type}</td>
-          <td>${p.density}</td>
-          <td>${p.atmosphere}</td>
-          <td>${p.water_presence}</td>
-          <td>${p.distance}</td>
-          <td>${p.temperature}</td>
-          <td>${p.discovery_date}</td>
-        `;
-        tbody.appendChild(row);
-      });
-    }
-  </script>
+  <script src="score.js"></script>
+  <script>renderScoreTable();</script>
 
 </body>
 </html>
