@@ -24,6 +24,7 @@ let viewSize = 100;
 const mapSize = 1000;
 
 // --- Generador procedural de planetas ---
+
 function generatePlanets(count) {
     const atmospheres = ["Nitrogen-Oxygen", "Carbon Dioxide", "Methane", "Hydrogen-Helium", "Sulfuric Acid", "Ammonia", "Unknown"];
     const waterOptions = ["Yes", "No", "Ice caps", "Possible", "Water vapor"];
@@ -40,7 +41,7 @@ function generatePlanets(count) {
 
         planets.push({
             name: `${baseName}-${idNum}${suffix}`,
-            type,
+            type: type,
             exoplanet_value: isExoplanet,
             density: (Math.random() * 6 + 0.5).toFixed(1) + " g/cm³",
             atmosphere: atmospheres[Math.floor(Math.random() * atmospheres.length)],
@@ -57,6 +58,8 @@ function generatePlanets(count) {
     return planets;
 }
 
+// -----
+
 const planetData = generatePlanets(500);
 
 // --- Nave ---
@@ -70,6 +73,7 @@ const nave = {
 };
 
 // --- Flecha (para cuando la nave sale de la vista) ---
+
 let arrowEl = document.createElement('div');
 arrowEl.id = 'nave-arrow';
 arrowEl.style.position = 'absolute';
@@ -81,6 +85,7 @@ arrowEl.style.display = 'none';
 starmapEl.appendChild(arrowEl);
 
 // --- Render principal ---
+
 function renderStarmap(planets) {
     starmapEl.innerHTML = '';
     starmapEl.appendChild(arrowEl);
@@ -88,6 +93,7 @@ function renderStarmap(planets) {
     const scale = starmapEl.clientWidth / viewSize;
 
     // --- Render nave ---
+
     const naveLeft = (nave.x - viewX) * scale;
     const naveTop = (nave.y - viewY) * scale;
     const naveRotation = nave.rotation || 0;
@@ -132,6 +138,7 @@ function renderStarmap(planets) {
     starmapEl.appendChild(naveEl);
 
     // --- Render planetas ---
+
     planets.forEach((planet, index) => {
         const left = (planet.x - viewX) * scale;
         const top = (planet.y - viewY) * scale;
@@ -152,6 +159,7 @@ function renderStarmap(planets) {
 }
 
 // --- Movimiento de la nave hacia un planeta ---
+
 function moveShipToPlanet(planet, callback) {
     const steps = 80;
     let step = 0;
@@ -189,6 +197,7 @@ function moveShipToPlanet(planet, callback) {
 }
 
 // --- Zoom inicial ---
+
 function centerInitialZoom() {
     const centerX = mapSize / 2;
     const centerY = mapSize / 2;
@@ -216,6 +225,7 @@ function centerInitialZoom() {
 }
 
 // --- Drag y zoom ---
+
 let isDragging = false;
 let dragStart = { x: 0, y: 0 };
 let viewStart = { x: 0, y: 0 };
@@ -257,6 +267,7 @@ starmapEl.addEventListener('wheel', e => {
 });
 
 // --- Modal planeta ---
+
 function openModal(planet) {
     moveShipToPlanet(planet, () => showPlanetModal(planet));
 }
@@ -292,4 +303,5 @@ modalEl.addEventListener('click', e => { if (e.target === modalEl) closeModal();
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
 // --- Inicializar ---
+
 centerInitialZoom();
