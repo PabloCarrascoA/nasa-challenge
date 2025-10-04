@@ -23,6 +23,67 @@ let viewY = 0;
 let viewSize = 100;
 const mapSize = 1000;
 
+
+let score = parseInt(localStorage.getItem("score")) || 0;
+let learnedPlanets = JSON.parse(localStorage.getItem("learnedPlanets")) || [];
+
+// Mostrar enlace SCORE en esquina superior izquierda
+function updateScoreDisplay() {
+    let scoreLink = document.getElementById("score-link");
+    if (!scoreLink) {
+        scoreLink = document.createElement("a");
+        scoreLink.id = "score-link";
+        scoreLink.href = "score.html";
+        scoreLink.textContent = `SCORE: ${score}`;
+        Object.assign(scoreLink.style, {
+            position: "fixed",
+            top: "15px",
+            left: "20px",
+            color: "#00ffea",
+            fontFamily: "Orbitron, sans-serif",
+            fontSize: "18px",
+            textDecoration: "none",
+            background: "rgba(0, 0, 0, 0.4)",
+            padding: "6px 12px",
+            borderRadius: "10px",
+            transition: "0.2s",
+            zIndex: "9999"
+        });
+        scoreLink.addEventListener("mouseenter", () => {
+            scoreLink.style.background = "rgba(0, 255, 200, 0.6)";
+        });
+        scoreLink.addEventListener("mouseleave", () => {
+            scoreLink.style.background = "rgba(0, 0, 0, 0.4)";
+        });
+        document.body.appendChild(scoreLink);
+    } else {
+        scoreLink.textContent = `SCORE: ${score}`;
+    }
+}
+// Guardar un exoplaneta descubierto
+function addExoplanet(planet) {
+    if (learnedPlanets.find(p => p.name === planet.name)) {
+        return; // ya existe
+    }
+
+    learnedPlanets.push({
+        name: planet.name,
+        type: planet.exoplanet_value ? "Exoplaneta" : "Planeta del Sistema Solar",
+        density: planet.density,
+        atmosphere: planet.atmosphere,
+        water_presence: planet.water_presence,
+        distance: planet.distance,
+        temperature: planet.temperature,
+        discovery_date: new Date().toLocaleString()
+    });
+    score += 10;
+
+    localStorage.setItem("score", score);
+    localStorage.setItem("learnedPlanets", JSON.stringify(learnedPlanets));
+
+    updateScoreDisplay();
+}
+
 // --- Generador procedural de planetas ---
 
 function generatePlanets(count) {
@@ -130,7 +191,6 @@ function renderStarmap(planets) {
     naveEl.style.position = 'absolute';
     naveEl.style.background = `url(${nave.image}) no-repeat center/contain`;
     naveEl.style.border = 'none';
-    naveEl.style.zIndex ='100';
     naveEl.style.transform = `
         translate(${naveLeft}px, ${naveTop}px)
         scale(${nave.size * scale / 60})
@@ -294,6 +354,7 @@ function showPlanetModal(planet) {
     `;
 
     modalEl.classList.add('active');
+    addExoplanet(planet);
 }
 
 function closeModal() {
@@ -304,5 +365,5 @@ modalEl.addEventListener('click', e => { if (e.target === modalEl) closeModal();
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
 // --- Inicializar ---
-
+updateScoreDisplay();
 centerInitialZoom();
