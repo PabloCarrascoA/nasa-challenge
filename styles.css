@@ -77,11 +77,15 @@ h2 {
 
 .starmap-grid {
     display: grid;
+    min-height: 400px;
     grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
     gap: 1.5rem;
     justify-items: center;
     align-items: center;
     padding: 1rem;
+    background: 
+        linear-gradient(135deg, rgba(0,0,0,0.6) 0%, rgba(10,25,41,0.6) 50%, rgba(26,35,50,0.6) 100%),
+        url('image.avif') no-repeat center/cover;
 }
 
 .planet-btn {
