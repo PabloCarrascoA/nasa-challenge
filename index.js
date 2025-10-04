@@ -140,24 +140,27 @@ function openModal(planet) {
       </div>
     `;
 
-    planetDetailsEl.innerHTML = gifContainer + `
-        <div class="planet-info">
-            <strong>Tipo:</strong> ${planet.exoplanet_value ? 'Exoplaneta' : 'Planeta del Sistema Solar'}
-        </div>
-        <div class="planet-info">
-            <strong>Densidad:</strong> ${planet.density}</div>
-        <div class="planet-info">
-            <strong>Atmósfera:</strong> ${planet.atmosphere}</div>
-        <div class="planet-info">
-            <strong>Presencia de agua:</strong> ${planet.water_presence}</div>
-        <div class="planet-info">
-            <strong>Distancia:</strong> ${planet.distance}</div>
-        <div class="planet-info">
-            <strong>Temperatura:</strong> ${planet.temperature}</div>
+    // Insertar GIF + info del planeta en un solo innerHTML
+    planetDetailsEl.innerHTML = `
+      ${gifHtml}
+      <div class="planet-info">
+          <strong>Tipo:</strong> ${planet.exoplanet_value ? 'Exoplaneta' : 'Planeta del Sistema Solar'}
+      </div>
+      <div class="planet-info">
+          <strong>Densidad:</strong> ${planet.density}</div>
+      <div class="planet-info">
+          <strong>Atmósfera:</strong> ${planet.atmosphere}</div>
+      <div class="planet-info">
+          <strong>Presencia de agua:</strong> ${planet.water_presence}</div>
+      <div class="planet-info">
+          <strong>Distancia:</strong> ${planet.distance}</div>
+      <div class="planet-info">
+          <strong>Temperatura:</strong> ${planet.temperature}</div>
     `;
 
     modalEl.classList.add('active');
 }
+
 
 // Cerrar modal
 function closeModal() {
