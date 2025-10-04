@@ -43,16 +43,16 @@ function generatePlanets(count) {
             name: `${baseName}-${idNum}${suffix}`,
             type: type,
             exoplanet_value: isExoplanet,
-            density: (Math.random() * 6 + 0.5).toFixed(1) + " g/cm³",
-            atmosphere: atmospheres[Math.floor(Math.random() * atmospheres.length)],
-            water_presence: waterOptions[Math.floor(Math.random() * waterOptions.length)],
-            distance: isExoplanet
-                ? (Math.random() * 2000 + 1).toFixed(2) + " light years"
-                : (Math.random() * 6 + 0.3).toFixed(1) + " billion km",
-            temperature: (Math.random() * 400 - 200).toFixed(1) + "°C",
-            x: Math.random() * mapSize,
-            y: Math.random() * mapSize,
+            koi_disposition: (Math.random() * 6 + 0.5).toFixed(1) + " g/cm³",
+            koi_prad: atmospheres[Math.floor(Math.random() * atmospheres.length)],
+            koi_period: waterOptions[Math.floor(Math.random() * waterOptions.length)],
+            koi_teq: (Math.random() * 6 + 0.5).toFixed(1),
+            koi_insol: (Math.random() * 6 + 0.5).toFixed(1),
+            ra_dec: (Math.random() * 360).toFixed(2) + "°",
+            x: Math.random() * mapSize,        // <-- Añade esto
+            y: Math.random() * mapSize,        // <-- Añade esto
             size: 0.5 + Math.random() * 1.5
+
         });
     }
     return planets;
@@ -306,11 +306,12 @@ function showPlanetModal(planet) {
     planetDetailsEl.innerHTML = `
         ${gifHtml}
         <div class="planet-info"><strong>Tipo:</strong> ${planet.type}</div>
-        <div class="planet-info"><strong>Densidad:</strong> ${planet.density}</div>
-        <div class="planet-info"><strong>Atmósfera:</strong> ${planet.atmosphere}</div>
-        <div class="planet-info"><strong>Presencia de agua:</strong> ${planet.water_presence}</div>
-        <div class="planet-info"><strong>Distancia:</strong> ${planet.distance}</div>
-        <div class="planet-info"><strong>Temperatura:</strong> ${planet.temperature}</div>
+        <div class="planet-info"><strong>Confirmación de Exoplaneta:</strong> ${planet.koi_disposition}</div>
+        <div class="planet-info"><strong>Radio Planetario:</strong> ${planet.koi_prad}</div>
+        <div class="planet-info"><strong>Periodo orbital (d):</strong> ${planet.koi_period}</div>
+        <div class="planet-info"><strong>Temperatura (K):</strong> ${planet.koi_teq}</div>
+        <div class="planet-info"><strong>Insolación relativa a la Tierra:</strong> ${planet.koi_insol}</div>
+        <div class="planet-info"><strong>Coordenadas celestes:</strong> ${planet.ra_dec}</div>
     `;
 
     modalEl.classList.add('active');
