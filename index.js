@@ -1,28 +1,13 @@
-
 const starmapEl = document.getElementById('starmap');
 const modalEl = document.getElementById('modal');
 const planetNameEl = document.getElementById('planetName');
 const planetDetailsEl = document.getElementById('planetDetails');
 const closeModalBtn = document.getElementById('closeModal');
-const floatingPanel = document.getElementById('floatingPanel');
-const floatingPanelSimple = document.getElementById('floatingPanelSimple');
-const showPanelBtn = document.getElementById('showPanelBtn');
-const closePanelBtn = document.getElementById('closePanelBtn');
 
-showPanelBtn.addEventListener('click', () => {
-    floatingPanelSimple.style.display = 'none';
-    floatingPanel.style.display = 'block';
-});
-
-closePanelBtn.addEventListener('click', () => {
-    floatingPanel.style.display = 'none';
-    floatingPanelSimple.style.display = 'block';
-})
-
-let viewX = 0;       // esquina superior izquierda de la vista
+let viewX = 0;
 let viewY = 0;
-let viewSize = 100;  // tamaño de la vista inicial (100x100 unidades)
-const mapSize = 1000; // tamaño real del mapa
+let viewSize = 100;
+const mapSize = 1000;
 
 // --- Generador procedural de planetas ---
 function generatePlanets(count) {
@@ -51,57 +36,157 @@ function generatePlanets(count) {
             water_presence: waterOptions[Math.floor(Math.random()*waterOptions.length)],
             distance: isExoplanet ? (Math.random()*2000+1).toFixed(2)+" light years" : (Math.random()*6+0.3).toFixed(1)+" billion km",
             temperature: (Math.random()*400-200).toFixed(1)+"°C",
-            x: Math.random()*mapSize,   // coordenadas reales
+            x: Math.random()*mapSize,
             y: Math.random()*mapSize,
-            size: 0.5 + Math.random()*1.5 // tamaño entre 0.5 y 2
+            size: 0.5 + Math.random()*1.5
         });
     }
 
     return planets;
 }
 
-// Generar cantidad de planetas aleatorios
+// Planetas
 const planetData = generatePlanets(500);
 
+// Nave
+const nave = {
+    name: "Navecita",
+    x: mapSize / 2,
+    y: mapSize / 2,
+    size: 2,
+    image: "images/navecita.png"
+};
 
-// Simular carga de datos
-function loadPlanets() {
-    setTimeout(() => {
-        renderStarmap(planetData);
-    }, 1000);
+// --- Render del starmap ---
+// Crear flecha
+let arrowEl = document.createElement('div');
+arrowEl.id = 'nave-arrow';
+arrowEl.style.position = 'absolute';
+arrowEl.style.width = '40px';
+arrowEl.style.height = '40px';
+arrowEl.style.background = 'url("images/flecha.png") no-repeat center/contain';
+arrowEl.style.transformOrigin = 'center center';
+arrowEl.style.display = 'none';
+starmapEl.appendChild(arrowEl);
+
+function renderStarmap(planets) {
+    starmapEl.innerHTML = '';
+    starmapEl.appendChild(arrowEl); // volver a añadir flecha
+
+    const scale = starmapEl.clientWidth / viewSize;
+
+    // --- Render nave ---
+    const naveLeft = (nave.x - viewX) * scale;
+    const naveTop  = (nave.y - viewY) * scale;
+    const naveOnScreen = 
+        naveLeft >= 0 && naveLeft <= starmapEl.clientWidth &&
+        naveTop  >= 0 && naveTop  <= starmapEl.clientHeight;
+
+    if(naveOnScreen){
+        arrowEl.style.display = 'none';
+    } else {
+        arrowEl.style.display = 'block';
+        // calcular vector desde centro de la vista hasta nave
+        const centerX = viewSize/2;
+        const centerY = viewSize/2;
+
+        const dirX = nave.x - (viewX + viewSize/2);
+        const dirY = nave.y - (viewY + viewSize/2);
+        const angle = Math.atan2(dirY, dirX); // radianes
+
+        // posición de la flecha en los bordes
+        const margin = 20;
+        const halfW = starmapEl.clientWidth/2 - margin;
+        const halfH = starmapEl.clientHeight/2 - margin;
+
+        const ratioX = Math.cos(angle);
+        const ratioY = Math.sin(angle);
+        // limitar posición al rectángulo del mapa
+        const scaleFactor = Math.min(halfW/Math.abs(ratioX || 0.01), halfH/Math.abs(ratioY || 0.01));
+        const arrowX = starmapEl.clientWidth/2 + ratioX*scaleFactor - 20; // 20 = half width
+        const arrowY = starmapEl.clientHeight/2 + ratioY*scaleFactor - 20; // 20 = half height
+
+        arrowEl.style.left = `${arrowX}px`;
+        arrowEl.style.top  = `${arrowY}px`;
+        arrowEl.style.transform = `rotate(${angle}rad)`;
+    }
+
+    // --- Render nave ---
+    const naveEl = document.createElement('div');
+    naveEl.className = 'planet-btn';
+    naveEl.style.width = '60px';
+    naveEl.style.height = '60px';
+    naveEl.style.transform = `translate(${naveLeft}px, ${naveTop}px) scale(${nave.size * scale / 60})`;
+    naveEl.style.position = 'absolute';
+    naveEl.style.background = `url(${nave.image}) no-repeat center/contain`;
+    naveEl.style.border = 'none';
+    starmapEl.appendChild(naveEl);
+
+    // --- Render planetas ---
+    planets.forEach((planet, index) => {
+        const left = (planet.x - viewX) * scale;
+        const top  = (planet.y - viewY) * scale;
+
+        if(left < -100 || left > starmapEl.clientWidth + 100) return;
+        if(top  < -100 || top  > starmapEl.clientHeight + 100) return;
+
+        const planetBtn = document.createElement('button');
+        planetBtn.className = `planet-btn ${planet.exoplanet_value ? 'exoplanet' : 'non-exoplanet'}`;
+        const planetScale = planet.size * scale / 60;
+        planetBtn.style.transform = `translate(${left}px, ${top}px) scale(${planetScale})`;
+        planetBtn.style.position = 'absolute';
+        planetBtn.dataset.index = index;
+
+        planetBtn.addEventListener('click', () => openModal(planet));
+        starmapEl.appendChild(planetBtn);
+    });
 }
 
-starmapEl.addEventListener('wheel', (e) => {
-    e.preventDefault();
-    const zoomFactor = 1.1;
-    if(e.deltaY < 0){
-        // hacer zoom in
-        viewSize /= zoomFactor;
-    } else {
-        // hacer zoom out
-        viewSize *= zoomFactor;
-        if(viewSize > mapSize) viewSize = mapSize; // límite
-    }
+// --- Función de zoom inicial centrado ---
+function centerInitialZoom() {
+    const centerX = mapSize / 2;
+    const centerY = mapSize / 2;
+
+    viewSize = 10;
+    viewX = centerX - viewSize/2;
+    viewY = centerY - viewSize/2;
+
     renderStarmap(planetData);
-});
+
+    const targetViewSize = 100;
+    const steps = 60;
+    let step = 0;
+
+    const zoomAnimation = setInterval(() => {
+        step++;
+        viewSize = 10 + (targetViewSize - 10) * (step/steps);
+        viewX = centerX - viewSize/2;
+        viewY = centerY - viewSize/2;
+
+        renderStarmap(planetData);
+
+        if(step >= steps) clearInterval(zoomAnimation);
+    }, 16);
+}
+
+// --- Drag y zoom ---
 let isDragging = false;
 let dragStart = {x:0, y:0};
 let viewStart = {x:0, y:0};
 
-starmapEl.addEventListener('mousedown', (e)=>{
+starmapEl.addEventListener('mousedown', e=>{
     isDragging = true;
-    dragStart = {x: e.clientX, y: e.clientY};
-    viewStart = {x: viewX, y: viewY};
+    dragStart = {x:e.clientX, y:e.clientY};
+    viewStart = {x:viewX, y:viewY};
     starmapEl.style.cursor = 'grabbing';
 });
 
-document.addEventListener('mousemove', (e)=>{
+document.addEventListener('mousemove', e=>{
     if(!isDragging) return;
     const scale = viewSize / starmapEl.clientWidth;
-    viewX = viewStart.x - (e.clientX - dragStart.x)*scale;
-    viewY = viewStart.y - (e.clientY - dragStart.y)*scale;
+    viewX = viewStart.x - (e.clientX - dragStart.x) * scale;
+    viewY = viewStart.y - (e.clientY - dragStart.y) * scale;
 
-    // Limitar para que no se salga del mapa
     viewX = Math.max(0, Math.min(mapSize - viewSize, viewX));
     viewY = Math.max(0, Math.min(mapSize - viewSize, viewY));
 
@@ -113,119 +198,45 @@ document.addEventListener('mouseup', ()=>{
     starmapEl.style.cursor = 'grab';
 });
 
-function renderStarmap(planets) {
-    starmapEl.innerHTML = '';
-    
-    planets.forEach((planet, index) => {
-        // Convertir coordenadas del planeta (0-1000) a la vista actual
-        const scale = starmapEl.clientWidth / viewSize; // píxeles por unidad
-        const left = (planet.x - viewX) * scale;
-        const top  = (planet.y - viewY) * scale;
+starmapEl.addEventListener('wheel', e=>{
+    e.preventDefault();
+    const zoomFactor = 1.1;
+    if(e.deltaY < 0){
+        viewSize /= zoomFactor;
+    } else {
+        viewSize *= zoomFactor;
+        if(viewSize > mapSize) viewSize = mapSize;
+    }
+    renderStarmap(planetData);
+});
 
-        // Solo renderizar si está dentro de la vista
-        if(left < -100 || left > starmapEl.clientWidth + 100) return;
-        if(top  < -100 || top  > starmapEl.clientHeight + 100) return;
-
-        const planetBtn = document.createElement('button');
-        planetBtn.className = `planet-btn ${planet.exoplanet_value ? 'exoplanet' : 'non-exoplanet'}`;
-
-        // Tamaño aleatorio base
-        const planetScale = planet.size * scale / 60; // ajusta según tu CSS
-        planetBtn.style.transform = `translate(${left}px, ${top}px) scale(${planetScale})`;
-        planetBtn.style.position = 'absolute';
-        planetBtn.dataset.index = index;
-
-        planetBtn.addEventListener('click', () => openModal(planet));
-        starmapEl.appendChild(planetBtn);
-    });
-}
-
-// info planeta
+// --- Modal planeta ---
 function openModal(planet) {
     planetNameEl.textContent = planet.name;
-
-    // Generar un color aleatorio vía hue
-    const randomHue = Math.floor(Math.random() * 360); // 0 a 360 grados
-
-    // Crear el GIF con hue dinámico
+    const randomHue = Math.floor(Math.random() * 360);
     const gifHtml = `
-      <div class="planet-gif-wrapper" style="--hue: ${randomHue}deg;">
+      <div class="planet-gif-wrapper" style="--hue:${randomHue}deg;">
           <img src="./Animated_rotation_of_Pluto.gif" alt="Planeta girando" class="planet-gif">
       </div>
     `;
-
-    // Insertar GIF + info del planeta en un solo innerHTML
     planetDetailsEl.innerHTML = `
       ${gifHtml}
-      <div class="planet-info">
-          <strong>Tipo:</strong> ${planet.type}
-      </div>
-      <div class="planet-info">
-          <strong>Densidad:</strong> ${planet.density}</div>
-      <div class="planet-info">
-          <strong>Atmósfera:</strong> ${planet.atmosphere}</div>
-      <div class="planet-info">
-          <strong>Presencia de agua:</strong> ${planet.water_presence}</div>
-      <div class="planet-info">
-          <strong>Distancia:</strong> ${planet.distance}</div>
-      <div class="planet-info">
-          <strong>Temperatura:</strong> ${planet.temperature}</div>
+      <div class="planet-info"><strong>Tipo:</strong> ${planet.exoplanet_value ? 'Exoplaneta' : 'Planeta del Sistema Solar'}</div>
+      <div class="planet-info"><strong>Densidad:</strong> ${planet.density}</div>
+      <div class="planet-info"><strong>Atmósfera:</strong> ${planet.atmosphere}</div>
+      <div class="planet-info"><strong>Presencia de agua:</strong> ${planet.water_presence}</div>
+      <div class="planet-info"><strong>Distancia:</strong> ${planet.distance}</div>
+      <div class="planet-info"><strong>Temperatura:</strong> ${planet.temperature}</div>
     `;
-
     modalEl.classList.add('active');
 }
 
-
-// Cerrar modal
 function closeModal() {
     modalEl.classList.remove('active');
 }
-
 closeModalBtn.addEventListener('click', closeModal);
+modalEl.addEventListener('click', e=>{ if(e.target===modalEl) closeModal(); });
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(); });
 
-modalEl.addEventListener('click', (e) => {
-    if (e.target === modalEl) {
-        closeModal();
-    }
-});
-
-document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-        closeModal();
-    }
-});
-
-// Inicializar aplicación
-loadPlanets();
-
-const addDataBtn = document.getElementById('addDataBtn');
-const accuracyEl = document.getElementById('accuracy');
-const recallEl = document.getElementById('recall');
-const lrInput = document.getElementById('learningRate');
-const lrVal = document.getElementById('lrVal');
-const epochsInput = document.getElementById('epochs');
-const epochsVal = document.getElementById('epochsVal');
-
-addDataBtn.addEventListener('click', () => {
-    alert('Simulando la carga de nuevos datos...');
-    // Aquí podrías añadir planetas nuevos al starmap para simular "nuevo dataset"
-    const newPlanets = generatePlanets(50);
-    planetData.push(...newPlanets);
-    renderStarmap(planetData);
-
-    // Simular actualización de métricas
-    const randomAccuracy = (Math.random() * 0.2 + 0.8).toFixed(2);
-    const randomRecall = (Math.random() * 0.2 + 0.7).toFixed(2);
-    accuracyEl.textContent = randomAccuracy;
-    recallEl.textContent = randomRecall;
-});
-
-lrInput.addEventListener('input', () => {
-    lrVal.textContent = lrInput.value;
-    // Aquí puedes simular reentrenar modelo con nuevo learning rate
-});
-
-epochsInput.addEventListener('input', () => {
-    epochsVal.textContent = epochsInput.value;
-    // Aquí puedes simular reentrenar modelo con nuevo número de epochs
-});
+// --- Inicializar ---
+centerInitialZoom();

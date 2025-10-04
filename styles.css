@@ -82,13 +82,34 @@ h2 {
     margin: 0 auto;
     border: 1px solid rgba(100, 181, 246, 0.3);
     border-radius: 15px;
+    overflow: hidden;
+
     background: 
         linear-gradient(135deg, rgba(0,0,0,0.6) 0%, rgba(10,25,41,0.6) 50%, rgba(26,35,50,0.6) 100%),
         url('images/fondo2.jpg') no-repeat center/cover,
         radial-gradient(circle at center, rgba(10, 25, 41, 0.8), rgba(0,0,0,0.9));
-    overflow: hidden;
+    
+    /* Overlay semi-transparente extra */
+    &::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: rgba(0,0,0,0.6); /* ajusta opacidad */
+        pointer-events: none;
+    }
 }
 
+.spaceship {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    background: url('images/navecita.png') no-repeat center/contain;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000; /* encima de los planetas */
+    pointer-events: none; /* no bloquea clics */
+}
 
 .planet-btn {
     width: 60px;
@@ -255,7 +276,6 @@ article {
 }
 /* Panel flotante dentro del mapa */
 .floating-panel {
-    display: none;
     position: absolute;
     top: 20px;
     right: 20px;
@@ -267,48 +287,6 @@ article {
     color: #e0e0e0;
     backdrop-filter: blur(10px);
     z-index: 500;
-}
-
-.close-panel-btn {
-
-    width: 100%;
-    padding: 0.4rem;
-    border: none;
-    border-radius: 8px;
-    background-color: #f44336;
-    color: white;
-    cursor: pointer;
-    font-weight: bold;
-    display: block;
-    transition: background 0.2s;
-}
-
-.close-panel-btn:hover {
-    background: #d32f2f;
-}
-
-.floating-panel-simple {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    z-index: 501;
-}
-
-.floating-panel-simple button {
-    background: #2196f3;
-    color: white;
-    border: none;
-    border-radius: 12px;
-    padding: 1rem 2rem;
-    font-size: 1.1rem;
-    font-weight: bold;
-    cursor: pointer;
-    box-shadow: 0 2px 10px rgba(33,150,243,0.2);
-    transition: background 0.2s;
-}
-
-.floating-panel-simple button:hover {
-    background: #64b5f6;
 }
 
 
@@ -328,7 +306,7 @@ article {
     font-size: 1.05rem;
 }
 
-.add-data-btn {
+.floating-panel button {
     width: 100%;
     padding: 0.4rem;
     border: none;
@@ -339,7 +317,7 @@ article {
     font-weight: bold;
 }
 
-.add-data-btn button:hover {
+.floating-panel button:hover {
     background-color: #64b5f6;
 }
 
