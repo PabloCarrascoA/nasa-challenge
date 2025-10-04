@@ -273,7 +273,7 @@ function showPlanetModal(planet) {
 
     planetDetailsEl.innerHTML = `
         ${gifHtml}
-        <div class="planet-info"><strong>Tipo:</strong> ${planet.exoplanet_value ? 'Exoplaneta' : 'Planeta del Sistema Solar'}</div>
+        <div class="planet-info"><strong>Tipo:</strong> ${planet.type}</div>
         <div class="planet-info"><strong>Densidad:</strong> ${planet.density}</div>
         <div class="planet-info"><strong>Atmósfera:</strong> ${planet.atmosphere}</div>
         <div class="planet-info"><strong>Presencia de agua:</strong> ${planet.water_presence}</div>
