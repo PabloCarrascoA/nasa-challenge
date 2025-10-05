@@ -77,7 +77,7 @@ async function loadExoplanetNames() {
 // --- Generador procedural de planetas ---
 
 async function generatePlanets(count) {
-    const baseNames = ["TrES", "HD", "Gliese", "KIC", "OGLE"];
+    const baseNames = ["Kepler", "K00113.01", "K00770.01", "K00771.01", "K00772.01"];
     const types = ["Exoplaneta", "Estrella", "Cometa", "Asteroide", "Galaxia", "AgujeroN"];
     const planets = [];
 
@@ -94,16 +94,15 @@ async function generatePlanets(count) {
         let type = types[Math.floor(Math.random() * types.length)];
 
         // --- Elegir nombre ---
-        let name;
-        if (type === "Exoplaneta" && exoplanetNames.length > 0) {
-            // Nombre real desde el JSON
-            name = exoplanetNames[Math.floor(Math.random() * exoplanetNames.length)];
-        } else {
-            // Generar nombre artificial
-            const baseName = baseNames[Math.floor(Math.random() * baseNames.length)];
-            const idNum = Math.floor(Math.random() * 9000) + 1000;
+        let name = "";
+
+         const baseName = baseNames[Math.floor(Math.random() * baseNames.length)];
+        if (baseName.includes("Kepler")) {
+            const idNum = Math.floor(Math.random() * 1000) + 1;
             const suffix = String.fromCharCode(97 + Math.floor(Math.random() * 3));
             name = `${baseName}-${idNum}${suffix}`;
+        } else {
+            name = baseName;
         }
 
         // --- Llamada a la API ---
@@ -125,7 +124,7 @@ async function generatePlanets(count) {
         }
     }
 
-        const color = typeColors[type] || "#aaaaaa";
+        const color = typeColors[type];
 
         planets.push({
             name: name,
