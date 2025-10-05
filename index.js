@@ -54,49 +54,79 @@ async function fetchPlanetData(planetName) {
     }
 }
 
+let exoplanetNames = [];
+
+async function loadExoplanetNames() {
+    try {
+        const response = await fetch('filtered_data.json');
+        if (!response.ok) throw new Error("No se pudo cargar filtered_data.json");
+        const data = await response.json();
+
+        // Extraer solo los nombres válidos
+        exoplanetNames = data
+            .map(item => item.kepoi_name)
+            .filter(name => !!name);
+
+        console.log(`✅ Se cargaron ${exoplanetNames.length} nombres de exoplanetas.`);
+    } catch (err) {
+        console.error("Error al cargar nombres de exoplanetas:", err);
+    }
+}
+
+
 // --- Generador procedural de planetas ---
 
 async function generatePlanets(count) {
-    const baseNames = ["Kepler", "K00113.01", "K00114.01"];
-    const candidatePlanet = ["K00113.01"]
-    const falsePlanet = ['K00114.01']
-    const types = ["Exoplaneta", "Estrella", "Cometa", "Asteroide","Galaxia","AgujeroN"];
+    const baseNames = ["TrES", "HD", "Gliese", "KIC", "OGLE"];
+    const types = ["Exoplaneta", "Estrella", "Cometa", "Asteroide", "Galaxia", "AgujeroN"];
     const planets = [];
 
+    const typeColors = {
+        "Exoplaneta": "#4ab3ff",
+        "Estrella": "#ff4b4b",
+        "Cometa": "#33ff99",
+        "Asteroide": "#c2a572",
+        "Galaxia": "#ffffff",
+        "AgujeroN": "#b84bff"
+    };
+
     for (let i = 0; i < count; i++) {
-
-        let name = "";
-
-        const baseName = baseNames[Math.floor(Math.random() * baseNames.length)];
-        if (baseName.includes("Kepler")) {
-            const idNum = Math.floor(Math.random() * 1000) + 1;
-            const suffix = String.fromCharCode(97 + Math.floor(Math.random() * 3));
-            name = `${baseName}-${idNum}${suffix}`;
-        } else {
-            name = baseName;
-        }
-        
         let type = types[Math.floor(Math.random() * types.length)];
 
-        const apiData = await fetchPlanetData(name);
+        // --- Elegir nombre ---
+        let name;
+        if (type === "Exoplaneta" && exoplanetNames.length > 0) {
+            // Nombre real desde el JSON
+            name = exoplanetNames[Math.floor(Math.random() * exoplanetNames.length)];
+        } else {
+            // Generar nombre artificial
+            const baseName = baseNames[Math.floor(Math.random() * baseNames.length)];
+            const idNum = Math.floor(Math.random() * 9000) + 1000;
+            const suffix = String.fromCharCode(97 + Math.floor(Math.random() * 3));
+            name = `${baseName}-${idNum}${suffix}`;
+        }
 
+        // --- Llamada a la API ---
+        const apiData = await fetchPlanetData(name);
         const koiDisposition = apiData?.koi_disposition || "";
-        
         let isExoplanet = false;
-        let probability = apiData?.proba.false_positive;
+        let probability = apiData?.proba?.false_positive;
 
         if (koiDisposition === "CONFIRMED") {
             isExoplanet = true;
             type = "Exoplaneta";
-            probability = apiData?.proba.confirmed;
+            probability = apiData?.proba?.confirmed;
         }
 
+        const color = typeColors[type] || "#aaaaaa";
+
         planets.push({
-            name: name,
-            type: type,
+            name,
+            type,
+            color,
             exoplanet_value: isExoplanet,
             koi_disposition: koiDisposition,
-            probability: probability!== undefined ? Number(probability).toFixed(2) : "",
+            probability: probability !== undefined ? Number(probability).toFixed(2) : "",
             koi_prad: apiData?.koi_prad || "",
             koi_period: apiData?.koi_period || "",
             koi_teq: apiData?.koi_teq || "",
@@ -105,7 +135,6 @@ async function generatePlanets(count) {
             x: Math.random() * mapSize,
             y: Math.random() * mapSize,
             size: 0.5 + Math.random() * 1.5
-
         });
     }
 
@@ -117,6 +146,7 @@ async function generatePlanets(count) {
 let planetData = [];
 
 async function initStarmap() {
+    await loadExoplanetNames();  // 🪐 Cargar nombres del JSON primero
     planetData = await generatePlanets(500);
     centerInitialZoom();
 }
@@ -208,7 +238,8 @@ function renderStarmap(planets) {
         if (top < -100 || top > starmapEl.clientHeight + 100) return;
 
         const planetBtn = document.createElement('button');
-        planetBtn.className = `planet-btn ${planet.exoplanet_value ? 'exoplanet' : 'non-exoplanet'}`;
+        planetBtn.className = 'planet-btn';
+        planetBtn.style.backgroundColor = planet.color;
         const planetScale = planet.size * scale / 60;
         planetBtn.style.transform = `translate(${left}px, ${top}px) scale(${planetScale})`;
         planetBtn.style.position = 'absolute';
