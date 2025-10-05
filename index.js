@@ -57,17 +57,25 @@ async function fetchPlanetData(planetName) {
 // --- Generador procedural de planetas ---
 
 async function generatePlanets(count) {
-    const baseNames = ["Kepler", "K00113.01"];
+    const baseNames = ["Kepler", "K00113.01", "K00114.01"];
+    const candidatePlanet = ["K00113.01"]
+    const falsePlanet = ['K00114.01']
     const types = ["Exoplaneta", "Estrella", "Cometa", "Asteroide","Galaxia","AgujeroN"];
     const planets = [];
 
     for (let i = 0; i < count; i++) {
 
-        const baseName = baseNames[Math.floor(Math.random() * baseNames.length)];
-        const idNum = Math.floor(Math.random() * 1000) + 1;
-        const suffix = String.fromCharCode(97 + Math.floor(Math.random() * 3));
+        let name = "";
 
-        const name = `${baseName}-${idNum}${suffix}`;
+        const baseName = baseNames[Math.floor(Math.random() * baseNames.length)];
+        if (baseName.includes("Kepler")) {
+            const idNum = Math.floor(Math.random() * 1000) + 1;
+            const suffix = String.fromCharCode(97 + Math.floor(Math.random() * 3));
+            name = `${baseName}-${idNum}${suffix}`;
+        } else {
+            name = baseName;
+        }
+        
         let type = types[Math.floor(Math.random() * types.length)];
 
         const apiData = await fetchPlanetData(name);
@@ -88,7 +96,7 @@ async function generatePlanets(count) {
             type: type,
             exoplanet_value: isExoplanet,
             koi_disposition: koiDisposition,
-            probability: probability,
+            probability: probability!== undefined ? Number(probability).toFixed(2) : "",
             koi_prad: apiData?.koi_prad || "",
             koi_period: apiData?.koi_period || "",
             koi_teq: apiData?.koi_teq || "",
@@ -359,7 +367,7 @@ function showPlanetModal(planet) {
     planetDetailsEl.innerHTML = `
         ${gifHtml}
         <div class="planet-info"><strong>Tipo:</strong> ${planet.type}</div>
-        <div class="planet-info"><strong>Confirmación de Exoplaneta:</strong> ${planet.koi_disposition} ${planet.probability}</div>
+        <div class="planet-info"><strong>Confirmación de Exoplaneta:</strong> ${planet.koi_disposition} → ${planet.probability}</div>
         <div class="planet-info"><strong>Radio Planetario:</strong> ${planet.koi_prad}</div>
         <div class="planet-info"><strong>Periodo orbital (d):</strong> ${planet.koi_period}</div>
         <div class="planet-info"><strong>Temperatura (K):</strong> ${planet.koi_teq}</div>
