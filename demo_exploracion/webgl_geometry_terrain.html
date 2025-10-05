@@ -52,18 +52,42 @@
 
         init();
 
+        function randomPastelColor() {
+        const hue = Math.random() * 360;  // tono aleatorio
+        const saturation = 40 + Math.random() * 30; // saturación moderada
+        const lightness = 60 + Math.random() * 20;  // luminosidad
+        const color = new THREE.Color(`hsl(${hue}, ${saturation}%, ${lightness}%)`);
+        return color;
+        }
+
         function init() {
             container = document.getElementById('container');
 
             camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 10000);
             scene = new THREE.Scene();
-            scene.background = new THREE.Color(0xefd1b5);
-            scene.fog = new THREE.FogExp2(0xefd1b5, 0.0025);
+            // Asignar color aleatorio al fondo y la niebla
+            const terrainColor = randomPastelColor();
+            scene.background = terrainColor;
+            const fogDensity = 0.0015 + trueRandom() * (0.0025 - 0.0005);
+            scene.fog = new THREE.FogExp2(terrainColor, fogDensity);
 
             const data = generateHeight(worldWidth, worldDepth);
 
-            camera.position.set(100, 800, -800);
-            camera.lookAt(-100, 810, -800);
+            function trueRandom() {
+            const array = new Uint32Array(1);
+            crypto.getRandomValues(array);
+            return array[0] / 0xFFFFFFFF;
+            }
+
+            // Posición inicial aleatoria dentro del rango del terreno
+            const startX = (trueRandom() - 0.5) * 700; // rango aprox. -3500 a 3500
+            const startZ = (trueRandom() - 0.5) * 700;
+            const startY = 800 + Math.random() * 200;   // altura variable
+
+            camera.position.set(startX, startY, startZ);
+
+            // Hacer que mire hacia el centro del mapa
+            camera.lookAt(0, 300, 0);
 
             const geometry = new THREE.PlaneGeometry(7500, 7500, worldWidth - 1, worldDepth - 1);
             geometry.rotateX(-Math.PI / 2);
@@ -78,7 +102,13 @@
             texture.wrapT = THREE.ClampToEdgeWrapping;
             texture.colorSpace = THREE.SRGBColorSpace;
 
-            mesh = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({ map: texture }));
+            mesh = new THREE.Mesh(
+            geometry,
+            new THREE.MeshBasicMaterial({
+                map: texture,
+                color: terrainColor
+            })
+            );
             scene.add(mesh);
 
             renderer = new THREE.WebGLRenderer();
