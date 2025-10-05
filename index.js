@@ -23,11 +23,40 @@ let viewY = 0;
 let viewSize = 100;
 const mapSize = 1000;
 
+// --- API ---
+
+async function fetchPlanetData(planetName) {
+    try {  
+
+        const response = await fetch(`http://127.0.0.1:5050/predict?name=${planetName}`);
+
+        if (!response.ok) {
+            throw new Error("Could not fetch the data");
+        }
+
+        const data = await response.json();
+        return data;
+
+        /*
+        const koiDisposition = data.koi_disposition;
+        const koiPrad = data.koi_prad
+        const koiPeriod = data.koi_period 
+        const koiTeq = data.koi_teq
+        const koiInsol = data.koi_insol 
+        const raDec = data.ra;
+        */
+
+
+    }
+    catch(error) {
+        console.error(error);
+        return null;
+    }
+}
+
 // --- Generador procedural de planetas ---
 
-function generatePlanets(count) {
-    const atmospheres = ["Nitrogen-Oxygen", "Carbon Dioxide", "Methane", "Hydrogen-Helium", "Sulfuric Acid", "Ammonia", "Unknown"];
-    const waterOptions = ["Yes", "No", "Ice caps", "Possible", "Water vapor"];
+async function generatePlanets(count) {
     const baseNames = ["Kepler", "Trappist", "Proxima", "Gliese", "HD", "Tau", "Luyten", "Ross", "Wolf"];
     const types = ["Exoplaneta", "Planeta del Sistema Solar", "Estrella", "Cometa", "Asteroide","Galaxia","AgujeroN"];
     const planets = [];
@@ -38,29 +67,40 @@ function generatePlanets(count) {
         const baseName = baseNames[Math.floor(Math.random() * baseNames.length)];
         const idNum = Math.floor(Math.random() * 1000) + 1;
         const suffix = String.fromCharCode(97 + Math.floor(Math.random() * 3));
+        const name = `${baseName}-${idNum}${suffix}`;
+
+        const apiData = await fetchPlanetData(name);
 
         planets.push({
-            name: `${baseName}-${idNum}${suffix}`,
+            name: name,
             type: type,
             exoplanet_value: isExoplanet,
-            koi_disposition: (Math.random() * 6 + 0.5).toFixed(1) + " g/cm³",
-            koi_prad: atmospheres[Math.floor(Math.random() * atmospheres.length)],
-            koi_period: waterOptions[Math.floor(Math.random() * waterOptions.length)],
-            koi_teq: (Math.random() * 6 + 0.5).toFixed(1),
-            koi_insol: (Math.random() * 6 + 0.5).toFixed(1),
-            ra_dec: (Math.random() * 360).toFixed(2) + "°",
-            x: Math.random() * mapSize,        // <-- Añade esto
-            y: Math.random() * mapSize,        // <-- Añade esto
+            koi_disposition: apiData?.koi_disposition || "",
+            koi_prad: apiData?.koi_prad || "",
+            koi_period: apiData?.koi_period || "",
+            koi_teq: apiData?.koi_teq || "",
+            koi_insol: apiData?.koi_insol || "",
+            ra_dec: apiData?.ra || "",
+            x: Math.random() * mapSize,
+            y: Math.random() * mapSize,
             size: 0.5 + Math.random() * 1.5
 
         });
     }
+
     return planets;
 }
 
 // -----
 
-const planetData = generatePlanets(500);
+let planetData = [];
+
+async function initStarmap() {
+    planetData = await generatePlanets(500);
+    centerInitialZoom();
+}
+
+initStarmap();
 
 // --- Nave ---
 const nave = {
@@ -327,4 +367,4 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal()
 
 // --- Inicializar ---
 updateScoreDisplay();
-centerInitialZoom();
+//centerInitialZoom();
