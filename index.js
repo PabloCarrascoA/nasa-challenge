@@ -96,7 +96,7 @@ async function generatePlanets(count) {
         // --- Elegir nombre ---
         let name = "";
 
-         const baseName = baseNames[Math.floor(Math.random() * baseNames.length)];
+        const baseName = baseNames[Math.floor(Math.random() * baseNames.length)];
         if (baseName.includes("Kepler")) {
             const idNum = Math.floor(Math.random() * 1000) + 1;
             const suffix = String.fromCharCode(97 + Math.floor(Math.random() * 3));
@@ -246,7 +246,8 @@ function renderStarmap(planets) {
         const planetBtn = document.createElement('button');
         planetBtn.className = 'planet-btn';
         planetBtn.setAttribute('type', planet.type);
-        planetBtn.style.backgroundColor = planet.color;
+        planetBtn.setAttribute('data-name', planet.name); // Para mostrar el nombre en hover
+        planetBtn.style.color = planet.color;
         const planetScale = planet.size * scale / 60;
         planetBtn.style.transform = `translate(${left}px, ${top}px) scale(${planetScale})`;
         planetBtn.style.position = 'absolute';

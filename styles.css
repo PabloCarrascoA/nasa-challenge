@@ -120,32 +120,26 @@ h2 {
 }
 
 .planet-btn {
-    width: 200px;
-    height: 200px;
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
     cursor: pointer;
     position: absolute;
     transition: all 0.3s ease;
     border: none;
 
-    /* 🌈 Gradiente de color puro con luminosidad y sin tonos oscuros */
-    background: radial-gradient(circle at 30% 30%,
-        rgba(255, 255, 255, 0.95) 0%,
-        color-mix(in srgb, currentColor 80%, white 20%) 35%,
-        color-mix(in srgb, currentColor 90%, white 10%) 70%,
-        color-mix(in srgb, currentColor 100%, transparent) 100%
-    );
+    /* Fondo sólido del color del planeta */
+    background: currentColor;
 
-    /* ✨ Halo brillante suave */
+    /* Halo del mismo color sólido */
     box-shadow:
-        0 0 25px color-mix(in srgb, currentColor 70%, white 30%),
-        0 0 60px color-mix(in srgb, currentColor 60%, white 40%),
-        0 0 100px color-mix(in srgb, currentColor 40%, white 50%);
+        0 0 25px 10px currentColor,
+        0 0 60px 20px currentColor,
+        0 0 100px 30px currentColor;
 
-    /* 🌫️ Difuminado leve para bordes suaves */
-    filter: drop-shadow(0 0 10px color-mix(in srgb, currentColor 70%, white 20%))
-            blur(0.3px);
+    filter: none;
 }
+
 .planet-btn.exoplanet {
     color: #4ab3ff;
 }
@@ -164,7 +158,7 @@ h2 {
 .planet-btn[type="AgujeroN"] {
     color: #b84bff;
 }
-/* 💥 Efecto hover — más brillo y expansión del halo */
+
 .planet-btn:hover {
     transform: scale(1.25);
     box-shadow:
