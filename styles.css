@@ -276,6 +276,22 @@ article {
     transform: rotate(90deg);
 }
 
+.exploration-btn {
+    display: block;
+    width: 100%;
+    padding: 0.8rem;
+    background: #03a9f4;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    text-align: center;
+    transition: background 0.3s ease;
+    margin-top: 1rem;
+}
+
 .loading {
     text-align: center;
     padding: 3rem;
