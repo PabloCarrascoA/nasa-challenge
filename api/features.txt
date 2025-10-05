@@ -1,0 +1,12 @@
+koi_period
+koi_duration
+koi_depth
+koi_prad
+koi_teq
+koi_slogg
+koi_srad
+koi_steff
+koi_smass
+koi_kepmag
+koi_snr
+koi_impact
