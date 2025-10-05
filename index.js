@@ -115,15 +115,22 @@ async function generatePlanets(count) {
         if (koiDisposition === "CONFIRMED") {
             isExoplanet = true;
             type = "Exoplaneta";
-            probability = apiData?.proba?.confirmed;
+            probability = apiData?.proba.confirmed;
+        } else {
+
+        isExoplanet = false;
+      
+        if (type === "Exoplaneta") {
+            type = types.filter(t => t !== "Exoplaneta")[Math.floor(Math.random() * (types.length - 1))];
         }
+    }
 
         const color = typeColors[type] || "#aaaaaa";
 
         planets.push({
-            name,
-            type,
-            color,
+            name: name,
+            type: type,
+            color: color,
             exoplanet_value: isExoplanet,
             koi_disposition: koiDisposition,
             probability: probability !== undefined ? Number(probability).toFixed(2) : "",
@@ -146,7 +153,7 @@ async function generatePlanets(count) {
 let planetData = [];
 
 async function initStarmap() {
-    await loadExoplanetNames();  // 🪐 Cargar nombres del JSON primero
+    await loadExoplanetNames();
     planetData = await generatePlanets(500);
     centerInitialZoom();
 }
