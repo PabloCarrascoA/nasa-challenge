@@ -57,25 +57,38 @@ async function fetchPlanetData(planetName) {
 // --- Generador procedural de planetas ---
 
 async function generatePlanets(count) {
-    const baseNames = ["Kepler", "Trappist", "Proxima", "Gliese", "HD", "Tau", "Luyten", "Ross", "Wolf"];
-    const types = ["Exoplaneta", "Planeta del Sistema Solar", "Estrella", "Cometa", "Asteroide","Galaxia","AgujeroN"];
+    const baseNames = ["Kepler", "K00113.01"];
+    const types = ["Exoplaneta", "Estrella", "Cometa", "Asteroide","Galaxia","AgujeroN"];
     const planets = [];
 
     for (let i = 0; i < count; i++) {
-        const type = types[Math.floor(Math.random() * types.length)];
-        const isExoplanet = type === "Exoplaneta";
+
         const baseName = baseNames[Math.floor(Math.random() * baseNames.length)];
         const idNum = Math.floor(Math.random() * 1000) + 1;
         const suffix = String.fromCharCode(97 + Math.floor(Math.random() * 3));
+
         const name = `${baseName}-${idNum}${suffix}`;
+        let type = types[Math.floor(Math.random() * types.length)];
 
         const apiData = await fetchPlanetData(name);
+
+        const koiDisposition = apiData?.koi_disposition || "";
+        
+        let isExoplanet = false;
+        let probability = apiData?.proba.false_positive;
+
+        if (koiDisposition === "CONFIRMED") {
+            isExoplanet = true;
+            type = "Exoplaneta";
+            probability = apiData?.proba.confirmed;
+        }
 
         planets.push({
             name: name,
             type: type,
             exoplanet_value: isExoplanet,
-            koi_disposition: apiData?.koi_disposition || "",
+            koi_disposition: koiDisposition,
+            probability: probability,
             koi_prad: apiData?.koi_prad || "",
             koi_period: apiData?.koi_period || "",
             koi_teq: apiData?.koi_teq || "",
@@ -346,7 +359,7 @@ function showPlanetModal(planet) {
     planetDetailsEl.innerHTML = `
         ${gifHtml}
         <div class="planet-info"><strong>Tipo:</strong> ${planet.type}</div>
-        <div class="planet-info"><strong>Confirmación de Exoplaneta:</strong> ${planet.koi_disposition}</div>
+        <div class="planet-info"><strong>Confirmación de Exoplaneta:</strong> ${planet.koi_disposition} ${planet.probability}</div>
         <div class="planet-info"><strong>Radio Planetario:</strong> ${planet.koi_prad}</div>
         <div class="planet-info"><strong>Periodo orbital (d):</strong> ${planet.koi_period}</div>
         <div class="planet-info"><strong>Temperatura (K):</strong> ${planet.koi_teq}</div>
