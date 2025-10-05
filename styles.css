@@ -123,41 +123,56 @@ h2 {
     width: 200px;
     height: 200px;
     border-radius: 50%;
-    border: 2px solid rgba(255, 255, 255, 0.3);
     cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 0 15px currentColor;
-    position: relative;
-    background: radial-gradient(circle at 30% 30%, currentColor, transparent);
-}
-
-.planet-btn.exoplanet {
-    background-color: #2196f3;
-    color: #2196f3;
-}
-
-.planet-btn.non-exoplanet {
-    background-color: #f44336;
-    color: #f44336;
-}
-
-.planet-btn:hover {
-    transform: scale(1.2);
-    box-shadow: 0 0 30px currentColor;
-}
-
-.planet-btn::after {
-    content: '';
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 40%;
-    height: 40%;
-    background: rgba(255, 255, 255, 0.4);
-    border-radius: 50%;
-    filter: blur(8px);
+    transition: all 0.3s ease;
+    border: none;
+
+    /* 🌈 Gradiente de color puro con luminosidad y sin tonos oscuros */
+    background: radial-gradient(circle at 30% 30%,
+        rgba(255, 255, 255, 0.95) 0%,
+        color-mix(in srgb, currentColor 80%, white 20%) 35%,
+        color-mix(in srgb, currentColor 90%, white 10%) 70%,
+        color-mix(in srgb, currentColor 100%, transparent) 100%
+    );
+
+    /* ✨ Halo brillante suave */
+    box-shadow:
+        0 0 25px color-mix(in srgb, currentColor 70%, white 30%),
+        0 0 60px color-mix(in srgb, currentColor 60%, white 40%),
+        0 0 100px color-mix(in srgb, currentColor 40%, white 50%);
+
+    /* 🌫️ Difuminado leve para bordes suaves */
+    filter: drop-shadow(0 0 10px color-mix(in srgb, currentColor 70%, white 20%))
+            blur(0.3px);
 }
+.planet-btn.exoplanet {
+    color: #4ab3ff;
+}
+.planet-btn[type="Estrella"] {
+    color: #ff4b4b;
+}
+.planet-btn[type="Cometa"] {
+    color: #33ff99;
+}
+.planet-btn[type="Asteroide"] {
+    color: #c2a572;
+}
+.planet-btn[type="Galaxia"] {
+    color: #ffffff;
+}
+.planet-btn[type="AgujeroN"] {
+    color: #b84bff;
+}
+/* 💥 Efecto hover — más brillo y expansión del halo */
+.planet-btn:hover {
+    transform: scale(1.25);
+    box-shadow:
+        0 0 40px color-mix(in srgb, currentColor 80%, white 30%),
+        0 0 90px color-mix(in srgb, currentColor 70%, white 40%),
+        0 0 140px color-mix(in srgb, currentColor 60%, white 50%);
+}
+
 
 .modal-overlay {
     display: none;

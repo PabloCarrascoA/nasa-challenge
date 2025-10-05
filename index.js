@@ -246,6 +246,7 @@ function renderStarmap(planets) {
 
         const planetBtn = document.createElement('button');
         planetBtn.className = 'planet-btn';
+        planetBtn.setAttribute('type', planet.type);
         planetBtn.style.backgroundColor = planet.color;
         const planetScale = planet.size * scale / 60;
         planetBtn.style.transform = `translate(${left}px, ${top}px) scale(${planetScale})`;
